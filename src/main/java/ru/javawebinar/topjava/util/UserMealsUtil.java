@@ -28,16 +28,16 @@ public class UserMealsUtil {
                 new UserMeal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
         );
         List<UserMealWithExceed> test1 = getFilteredWithExceeded(mealList, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
+
         System.out.println("Test - " + (test1.size() == 6 ? "correct" : "wrong"));
+        test1.forEach(System.out::println);
     }
 
     public static List<UserMealWithExceed> getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        return mealList.stream().filter(user -> {
-            LocalDateTime userDateTime = user.getDateTime();
-            LocalDate date = LocalDate.ofYearDay(userDateTime.getYear(), userDateTime.getDayOfYear());
-            LocalDateTime localStartTime = startTime.atDate(date);
-            LocalDateTime localEndTime = endTime.atDate(date);
-            return userDateTime.isAfter(localStartTime) && userDateTime.isBefore(localEndTime) || userDateTime.isEqual(localStartTime) || userDateTime.isEqual(localEndTime);
-        }).map(user -> new UserMealWithExceed(user.getDateTime(), user.getDescription(), user.getCalories(), user.getCalories() < caloriesPerDay)).collect(Collectors.toList());
+        return mealList
+                .stream()
+                .filter(user -> TimeUtil.isBetween(user.getDateTime().toLocalTime(), startTime, endTime))
+                .map(user -> new UserMealWithExceed(user.getDateTime(), user.getDescription(), user.getCalories(), user.getCalories() < caloriesPerDay))
+                .collect(Collectors.toList());
     }
 }

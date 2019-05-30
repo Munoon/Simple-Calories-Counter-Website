@@ -9,6 +9,7 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class UserMealsUtil {
     public static void main(String[] args) {
@@ -33,9 +34,8 @@ public class UserMealsUtil {
 
     public static List<UserMealWithExceed> getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         Map<LocalDate, Integer> calories = new HashMap<>();
-
-        return mealList.stream()
-                .map(meal -> {
+        mealList.stream()
+                .forEach(meal -> {
                     LocalDate mealTime = meal.getDateTime().toLocalDate();
 
                     if (calories.containsKey(mealTime)) {
@@ -43,9 +43,9 @@ public class UserMealsUtil {
                     } else {
                         calories.put(mealTime, meal.getCalories());
                     }
+                });
 
-                    return meal;
-                })
+        return mealList.stream()
                 .filter(meal -> TimeUtil.isBetween(meal.getDateTime().toLocalTime(), startTime, endTime))
                 .collect(Collectors.toList())
                 .stream()

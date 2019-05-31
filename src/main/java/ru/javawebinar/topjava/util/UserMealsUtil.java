@@ -37,7 +37,7 @@ public class UserMealsUtil {
                 .collect(Collectors.toMap(
                         meal -> meal.getDateTime().toLocalDate(),
                         UserMeal::getCalories,
-                        (firstMeal, secondMeal) -> firstMeal + secondMeal
+                        Integer::sum
                 ));
 
         return mealList.stream()

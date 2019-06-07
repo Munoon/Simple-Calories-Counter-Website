@@ -26,4 +26,8 @@ public class MealDataUtil {
     public List<MealTo> getMeals() {
         return meals;
     }
+
+    public void deleteByID(int id) {
+        meals.removeIf(meal -> meal.getId() == id);
+    }
 }

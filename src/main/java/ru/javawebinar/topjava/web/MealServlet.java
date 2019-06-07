@@ -20,4 +20,21 @@ public class MealServlet extends HttpServlet {
         req.setAttribute("meals", data.getMeals());
         req.getRequestDispatcher("/meals.jsp").forward(req, resp);
     }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        if (req.getParameter("delete") != null) {
+
+            int id = Integer.parseInt(req.getParameter("delete"));
+            data.deleteByID(id);
+
+        } else if (req.getParameter("edit") != null) {
+
+            int id = Integer.parseInt(req.getParameter("edit"));
+            req.setAttribute("edit", "EDIT ID " + id);
+
+        }
+
+        doGet(req, resp);
+    }
 }

@@ -45,7 +45,7 @@ public class MealServlet extends HttpServlet {
             case "update":
                 id = Integer.parseInt(req.getParameter("id"));
                 data.updateMeal(createMealTo(req, id));
-                logger.debug("Updated meal with id " + id);
+                logger.debug("Edited meal with id " + id);
                 break;
             case "add":
                 id  = data.getLastID() + 1;

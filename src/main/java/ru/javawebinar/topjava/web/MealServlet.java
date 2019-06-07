@@ -31,32 +31,42 @@ public class MealServlet extends HttpServlet {
             return;
         }
 
-        int id = Integer.parseInt(req.getParameter("id"));
+        int id;
 
         switch (req.getParameter("type")) {
             case "delete":
+                id = Integer.parseInt(req.getParameter("id"));
                 data.deleteByID(id);
                 break;
             case "edit":
+                id = Integer.parseInt(req.getParameter("id"));
                 req.setAttribute("edit", data.getMealByID(id));
                 break;
             case "update":
-                String formDate = req.getParameter("date");
-                String formTime = req.getParameter("time");
-
-                int year = Integer.parseInt(formDate.substring(0, formDate.indexOf("-")));
-                int month = Integer.parseInt(formDate.substring(formDate.indexOf("-") + 1, formDate.lastIndexOf("-")));
-                int date = Integer.parseInt(formDate.substring(formDate.lastIndexOf("-") + 1));
-
-                int hours = Integer.parseInt(formTime.substring(0, formTime.indexOf(":")));
-                int minute = Integer.parseInt(formTime.substring(formTime.indexOf(":") + 1));
-
-                LocalDateTime localDateTime = LocalDateTime.of(year, month, date, hours, minute);
-
-                MealTo newMeal = new MealTo(id, localDateTime, req.getParameter("description"), Integer.parseInt(req.getParameter("calories")), !(req.getParameter("excess") == null));
-                data.updateMeal(newMeal);
+                id = Integer.parseInt(req.getParameter("id"));
+                data.updateMeal(createMealTo(req, id));
+                break;
+            case "add":
+                data.addMeal(createMealTo(req, data.getLastID() + 1));
+                break;
         }
 
         doGet(req, resp);
+    }
+
+    private MealTo createMealTo(HttpServletRequest req, int id) {
+        String formDate = req.getParameter("date");
+        String formTime = req.getParameter("time");
+
+        int year = Integer.parseInt(formDate.substring(0, formDate.indexOf("-")));
+        int month = Integer.parseInt(formDate.substring(formDate.indexOf("-") + 1, formDate.lastIndexOf("-")));
+        int date = Integer.parseInt(formDate.substring(formDate.lastIndexOf("-") + 1));
+
+        int hours = Integer.parseInt(formTime.substring(0, formTime.indexOf(":")));
+        int minute = Integer.parseInt(formTime.substring(formTime.indexOf(":") + 1));
+
+        LocalDateTime localDateTime = LocalDateTime.of(year, month, date, hours, minute);
+
+        return new MealTo(id, localDateTime, req.getParameter("description"), Integer.parseInt(req.getParameter("calories")), !(req.getParameter("excess") == null));
     }
 }

@@ -55,8 +55,10 @@
         </tbody>
     </table>
 
+    <hr>
+
     <c:if test="${edit != null}">
-        <hr>
+        <h2>Редактироваить продукт</h2>
         <form method="post">
             <input type="hidden" name="type" value="update">
             <input type="hidden" name="id" value="${edit.id}">
@@ -73,6 +75,19 @@
             <br>
             <input type="text" name="description" value="${edit.description}" placeholder="Описание"><br>
             <input type="submit" value="Обновить">
+        </form>
+    </c:if>
+    <c:if test="${edit == null}">
+        <h2>Добавить продукт</h2>
+        <form method="post">
+            <input type="hidden" name="type" value="add">
+            <input type="hidden" name="id">
+            <input type="date" name="date" placeholder="Дата"><br>
+            <input type="time" name="time" placeholder="Время"><br>
+            <input type="number" name="calories" placeholder="Калории"><br>
+            Перевышен ли лимит каллорий в день? <input type="checkbox" name="excess"><br>
+            <input type="text" name="description" placeholder="Описание"><br>
+            <input type="submit" value="Добавить">
         </form>
     </c:if>
 </body>

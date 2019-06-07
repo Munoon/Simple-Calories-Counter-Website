@@ -39,6 +39,14 @@ public class MealDataUtil {
         meals.set(getIndexByID(meal.getId()), meal);
     }
 
+    public void addMeal(MealTo meal) {
+        meals.add(meal);
+    }
+
+    public int getLastID() {
+        return meals.get(meals.size() - 1).getId();
+    }
+
     private int getIndexByID(int id) {
         for (int i = 0; i < meals.size(); i++) {
             if (meals.get(i).getId() == id)

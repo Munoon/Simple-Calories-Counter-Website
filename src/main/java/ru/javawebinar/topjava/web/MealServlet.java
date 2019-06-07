@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class MealServlet extends HttpServlet {
@@ -37,6 +36,7 @@ public class MealServlet extends HttpServlet {
             case "delete":
                 id = Integer.parseInt(req.getParameter("id"));
                 data.deleteByID(id);
+                logger.debug("Deleted meal with id " + id);
                 break;
             case "edit":
                 id = Integer.parseInt(req.getParameter("id"));
@@ -45,9 +45,12 @@ public class MealServlet extends HttpServlet {
             case "update":
                 id = Integer.parseInt(req.getParameter("id"));
                 data.updateMeal(createMealTo(req, id));
+                logger.debug("Updated meal with id " + id);
                 break;
             case "add":
-                data.addMeal(createMealTo(req, data.getLastID() + 1));
+                id  = data.getLastID() + 1;
+                data.addMeal(createMealTo(req, id));
+                logger.debug("Added meal with id " + id);
                 break;
         }
 

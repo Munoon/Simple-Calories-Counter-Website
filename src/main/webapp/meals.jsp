@@ -38,13 +38,15 @@
                     <td>${meal.excess}</td>
                     <td>
                         <form method="post">
-                            <input type="hidden" name="edit" value="${meal.id}">
+                            <input type="hidden" name="type" value="edit">
+                            <input type="hidden" name="id" value="${meal.id}">
                             <input type="submit" value="Редактироваить">
                         </form>
                     </td>
                     <td>
                         <form method="post">
-                            <input type="hidden" name="delete" value="${meal.id}">
+                            <input type="hidden" name="type" value="delete">
+                            <input type="hidden" name="id" value="${meal.id}">
                             <input type="submit" value="Удалить">
                         </form>
                     </td>
@@ -53,6 +55,25 @@
         </tbody>
     </table>
 
-    ${edit}
+    <c:if test="${edit != null}">
+        <hr>
+        <form method="post">
+            <input type="hidden" name="type" value="update">
+            <input type="hidden" name="id" value="${edit.id}">
+            <input type="date" name="date" value="${edit.dateTime.toLocalDate()}" placeholder="Дата"><br>
+            <input type="time" name="time" value="${edit.dateTime.toLocalTime()}" placeholder="Время"><br>
+            <input type="number" name="calories" value="${edit.calories}" placeholder="Калории"><br>
+            Перевышен ли лимит каллорий в день?
+                <c:if test="${edit.excess == true}">
+                    <input type="checkbox" name="excess" checked>
+                </c:if>
+                <c:if test="${edit.excess == false}">
+                    <input type="checkbox" name="excess">
+                </c:if>
+            <br>
+            <input type="text" name="description" value="${edit.description}" placeholder="Описание"><br>
+            <input type="submit" value="Обновить">
+        </form>
+    </c:if>
 </body>
 </html>

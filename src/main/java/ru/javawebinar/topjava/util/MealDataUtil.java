@@ -30,4 +30,20 @@ public class MealDataUtil {
     public void deleteByID(int id) {
         meals.removeIf(meal -> meal.getId() == id);
     }
+
+    public MealTo getMealByID(int id) {
+        return meals.get(getIndexByID(id));
+    }
+
+    public void updateMeal(MealTo meal) {
+        meals.set(getIndexByID(meal.getId()), meal);
+    }
+
+    private int getIndexByID(int id) {
+        for (int i = 0; i < meals.size(); i++) {
+            if (meals.get(i).getId() == id)
+                return i;
+        }
+        return 0;
+    }
 }

@@ -1,0 +1,29 @@
+package ru.javawebinar.topjava.util;
+
+import ru.javawebinar.topjava.model.MealTo;
+
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class MealDataUtil {
+    private List<MealTo> meals;
+
+    public MealDataUtil() {
+        meals = new ArrayList<>();
+        meals.addAll(Arrays.asList(
+                new MealTo(1, LocalDateTime.of(2019, Month.JUNE, 7, 10, 0), "Завтрак", 500, false),
+                new MealTo(2, LocalDateTime.of(2019, Month.JUNE, 7, 14, 0), "Обед", 400, false),
+                new MealTo(3, LocalDateTime.of(2019, Month.JUNE, 7, 19, 0), "Ужин", 400, false),
+                new MealTo(4, LocalDateTime.of(2019, Month.JUNE, 8, 10, 0), "Завтрак", 500, true),
+                new MealTo(5, LocalDateTime.of(2019, Month.JUNE, 8, 14, 0), "Обед", 500, true),
+                new MealTo(6, LocalDateTime.of(2019, Month.JUNE, 8, 20, 0), "Ужин", 700, true)
+        ));
+    }
+
+    public List<MealTo> getMeals() {
+        return meals;
+    }
+}

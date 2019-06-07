@@ -36,7 +36,7 @@
                     <td>${meal.calories}</td>
                     <td>${meal.excess}</td>
                     <td>
-                        <form action="deleteMeal" method="post">
+                        <form method="post">
                             <input type="hidden" name="id" value="${meal.id}">
                             <input type="submit" value="Удалить">
                         </form>

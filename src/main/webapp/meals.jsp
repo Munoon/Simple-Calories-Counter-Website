@@ -24,6 +24,7 @@
                 <td>Описание</td>
                 <td>Калории</td>
                 <td>Превышение каллорий в день</td>
+                <td>Удалить</td>
             </tr>
         </thead>
         <tbody>
@@ -34,6 +35,12 @@
                     <td>${meal.description}</td>
                     <td>${meal.calories}</td>
                     <td>${meal.excess}</td>
+                    <td>
+                        <form action="deleteMeal" method="post">
+                            <input type="hidden" name="id" value="${meal.id}">
+                            <input type="submit" value="Удалить">
+                        </form>
+                    </td>
                 </tr>
             </c:forEach>
         </tbody>

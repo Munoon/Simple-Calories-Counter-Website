@@ -16,7 +16,7 @@ import java.util.List;
 
 public class MealServlet extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(MealServlet.class);
-    private static List<MealTo> mealsList;
+    public static List<MealTo> mealsList;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -29,12 +29,12 @@ public class MealServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         mealsList = Arrays.asList(
-                new MealTo(LocalDateTime.of(2019, Month.JUNE, 7, 10, 0), "Завтрак", 500, false),
-                new MealTo(LocalDateTime.of(2019, Month.JUNE, 7, 14, 0), "Обед", 400, false),
-                new MealTo(LocalDateTime.of(2019, Month.JUNE, 7, 19, 0), "Ужин", 400, false),
-                new MealTo(LocalDateTime.of(2019, Month.JUNE, 8, 10, 0), "Завтрак", 500, true),
-                new MealTo(LocalDateTime.of(2019, Month.JUNE, 8, 14, 0), "Обед", 500, true),
-                new MealTo(LocalDateTime.of(2019, Month.JUNE, 8, 20, 0), "Ужин", 700, true)
+                new MealTo(0, LocalDateTime.of(2019, Month.JUNE, 7, 10, 0), "Завтрак", 500, false),
+                new MealTo(1, LocalDateTime.of(2019, Month.JUNE, 7, 14, 0), "Обед", 400, false),
+                new MealTo(2, LocalDateTime.of(2019, Month.JUNE, 7, 19, 0), "Ужин", 400, false),
+                new MealTo(3, LocalDateTime.of(2019, Month.JUNE, 8, 10, 0), "Завтрак", 500, true),
+                new MealTo(4, LocalDateTime.of(2019, Month.JUNE, 8, 14, 0), "Обед", 500, true),
+                new MealTo(5, LocalDateTime.of(2019, Month.JUNE, 8, 20, 0), "Ужин", 700, true)
         );
     }
 }

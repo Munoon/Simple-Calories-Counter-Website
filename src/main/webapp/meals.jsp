@@ -20,7 +20,6 @@
         <thead>
             <tr>
                 <td>Дата</td>
-                <td>Время</td>
                 <td>Описание</td>
                 <td>Калории</td>
                 <td>Превышение каллорий в день</td>
@@ -31,8 +30,7 @@
         <tbody>
             <c:forEach var="meal" items="${meals}">
                 <tr>
-                    <td>${meal.dateTime.toLocalDate()}</td>
-                    <td>${meal.dateTime.toLocalTime()}</td>
+                    <td>${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}</td>
                     <td>${meal.description}</td>
                     <td>${meal.calories}</td>
                     <c:if test="${meal.excess}">

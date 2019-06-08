@@ -33,12 +33,10 @@
                     <td>${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}</td>
                     <td>${meal.description}</td>
                     <td>${meal.calories}</td>
-                    <c:if test="${meal.excess}">
-                        <td style="color: blue">${meal.excess}</td> <!-- Сделал голубое что бы мог различать. Я дальтоник и для меня зелённый и красный - одинаковые цвета( -->
-                    </c:if>
-                    <c:if test="${!meal.excess}">
-                        <td style="color: red">${meal.excess}</td>
-                    </c:if>
+
+                    <!-- Сделал голубое что бы мог различать. Я дальтоник и для меня зелённый и красный - одинаковые цвета( -->
+                    <td style="color: <c:out value="${meal.excess ? 'blue' : 'red'}" />">${meal.excess}</td>
+
                     <td>
                         <form method="post">
                             <input type="hidden" name="type" value="edit">
@@ -60,31 +58,15 @@
 
     <hr>
 
-    <c:if test="${edit != null}">
-        <h2>Редактироваить продукт</h2>
-    </c:if>
-    <c:if test="${edit == null}">
-        <h2>Добавить продукт</h2>
-    </c:if>
-
+    <h2><c:out value="${edit == null ? 'Добавить продукт' : 'Редактироваить продукт'}"/></h2>
     <form method="post">
-        <c:if test="${edit != null}">
-            <input type="hidden" name="type" value="update">
-        </c:if>
-        <c:if test="${edit == null}">
-            <input type="hidden" name="type" value="add">
-        </c:if>
+        <input type="hidden" name="type" value="<c:out value="${edit == null ? 'add' : 'update'}"/>">
         <input type="hidden" name="id" value="${edit.id}">
         <input type="date" name="date" value="${edit.dateTime.toLocalDate()}" placeholder="Дата"><br>
         <input type="time" name="time" value="${edit.dateTime.toLocalTime()}" placeholder="Время"><br>
         <input type="number" name="calories" value="${edit.calories}" placeholder="Калории"><br>
         <input type="text" name="description" value="${edit.description}" placeholder="Описание"><br>
-        <c:if test="${edit != null}">
-            <input type="submit" value="Обновить">
-        </c:if>
-        <c:if test="${edit == null}">
-            <input type="submit" value="Добавить">
-        </c:if>
+        <input type="submit" value="<c:out value="${edit == null ? 'Добавить' : 'Обновить'}"/>">
     </form>
 </body>
 </html>

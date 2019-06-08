@@ -26,7 +26,7 @@ public class MealServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        logger.debug("Meals page");
+        req.setCharacterEncoding("UTF-8");
         List<Meal> meals = crud.findAll();
         List<MealTo> filteredMeals = MealsUtil.getFilteredWithExcess(meals, LocalTime.MIN, LocalTime.MAX, 1500);
         req.setAttribute("meals", filteredMeals);
@@ -40,6 +40,7 @@ public class MealServlet extends HttpServlet {
             return;
         }
 
+        req.setCharacterEncoding("UTF-8");
         int id = 0;
         if (req.getParameter("id") != null && !req.getParameter("id").equals(""))
             id = Integer.parseInt(req.getParameter("id"));
@@ -47,19 +48,24 @@ public class MealServlet extends HttpServlet {
         switch (req.getParameter("type")) {
             case "delete":
                 crud.delete(id);
+                logger.debug("Deleted meal with id {}", id);
                 break;
             case "edit":
                 req.setAttribute("edit", crud.get(id));
                 break;
             case "update":
                 crud.update(id, createMeal(req));
+                logger.debug("Updated meal with id {}", id);
                 break;
             case "add":
                 crud.add(createMeal(req));
+                logger.debug("Added meal with id {}", id);
                 break;
         }
 
         doGet(req, resp); // при редиректе теряеться атрибуты request
+        // Чесно говоря не понимаю чем это плохо? Так адресс остаёться нормальным (нет .jsp в конце) и данные не теряються
+        // На мой взгял это удобно и практично
     }
 
     private Meal createMeal(HttpServletRequest req) {

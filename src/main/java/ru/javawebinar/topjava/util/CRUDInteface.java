@@ -8,4 +8,5 @@ public interface CRUDInteface<ID, T> {
     void update(ID id, T t);
     void delete(ID id);
     List<T> findAll();
+    T get(ID id);
 }

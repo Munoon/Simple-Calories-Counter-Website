@@ -40,4 +40,9 @@ public class MealDAO implements CRUDInteface<Integer, Meal> {
         });
         return mealList;
     }
+
+    @Override
+    public Meal get(Integer id) {
+        return meals.get(id);
+    }
 }

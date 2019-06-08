@@ -70,13 +70,23 @@
     </c:if>
 
     <form method="post">
-        <input type="hidden" name="type" value="update">
+        <c:if test="${edit != null}">
+            <input type="hidden" name="type" value="update">
+        </c:if>
+        <c:if test="${edit == null}">
+            <input type="hidden" name="type" value="add">
+        </c:if>
         <input type="hidden" name="id" value="${edit.id}">
         <input type="date" name="date" value="${edit.dateTime.toLocalDate()}" placeholder="Дата"><br>
         <input type="time" name="time" value="${edit.dateTime.toLocalTime()}" placeholder="Время"><br>
         <input type="number" name="calories" value="${edit.calories}" placeholder="Калории"><br>
         <input type="text" name="description" value="${edit.description}" placeholder="Описание"><br>
-        <input type="submit" value="Обновить">
+        <c:if test="${edit != null}">
+            <input type="submit" value="Обновить">
+        </c:if>
+        <c:if test="${edit == null}">
+            <input type="submit" value="Добавить">
+        </c:if>
     </form>
 </body>
 </html>

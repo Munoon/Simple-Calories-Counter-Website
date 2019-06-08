@@ -26,15 +26,4 @@
         <url-pattern>/meals</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>deletMealServlet</servlet-name>
-        <servlet-class>ru.javawebinar.topjava.web.DeleteMealServlet</servlet-class>
-        <load-on-startup>0</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>deletMealServlet</servlet-name>
-        <url-pattern>/deleteMeal</url-pattern>
-    </servlet-mapping>
-
-
 </web-app>

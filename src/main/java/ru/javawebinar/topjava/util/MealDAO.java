@@ -3,17 +3,17 @@ package ru.javawebinar.topjava.util;
 import ru.javawebinar.topjava.model.Meal;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MealDAO implements CRUDInteface<Integer, Meal> {
-    private Map<Integer, Meal> meals = new HashMap<>();
-    private int lastId;
+    private ConcurrentHashMap<Integer, Meal> meals = new ConcurrentHashMap<>();
+    private AtomicInteger lastId = new AtomicInteger();
 
     @Override
     public void add(Meal meal) {
-        meals.put(++lastId, meal);
+        meals.put(lastId.addAndGet(1), meal);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class MealDAO implements CRUDInteface<Integer, Meal> {
 
     @Override
     public void update(Integer id, Meal meal) {
-        meals.put(id, meal);
+        meals.replace(id, meal);
     }
 
     @Override

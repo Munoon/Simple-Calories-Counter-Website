@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.time.format.DateTimeFormatter" %><%--
   Created by IntelliJ IDEA.
   User: Munoo
   Date: 07.06.2019
@@ -9,6 +9,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Meals List</title>
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
@@ -59,7 +60,7 @@
     <hr>
 
     <h2><c:out value="${edit == null ? 'Добавить продукт' : 'Редактироваить продукт'}"/></h2>
-    <form method="post">
+    <form method="post" accept-charset="UTF-8">
         <input type="hidden" name="type" value="<c:out value="${edit == null ? 'add' : 'update'}"/>">
         <input type="hidden" name="id" value="${edit.id}">
         <input type="date" name="date" value="${edit.dateTime.toLocalDate()}" placeholder="Дата"><br>

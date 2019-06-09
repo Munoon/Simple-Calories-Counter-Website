@@ -13,10 +13,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -68,7 +70,9 @@ public class MealServlet extends HttpServlet {
         // На мой взгял это удобно и практично
     }
 
-    private Meal createMeal(HttpServletRequest req) {
+    private Meal createMeal(HttpServletRequest req) throws UnsupportedEncodingException {
+        req.setCharacterEncoding("UTF-8");
+
         String formDate = req.getParameter("date");
         String formTime = req.getParameter("time");
 

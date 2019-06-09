@@ -30,7 +30,7 @@
         </thead>
         <tbody>
             <c:forEach var="meal" items="${meals}">
-                <tr style="color: <c:out value="${meal.excess ? 'blue' : 'red'}" />">
+                <tr style="color: <c:out value="${meal.excess ? 'red' : 'blue'}" />">
                     <td>${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}</td>
                     <td>${meal.description}</td>
                     <td>${meal.calories}</td>

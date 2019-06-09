@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
-import ru.javawebinar.topjava.util.CRUDInteface;
-import ru.javawebinar.topjava.util.MealDAO;
+import ru.javawebinar.topjava.repository.CrudInteface;
+import ru.javawebinar.topjava.repository.MealDao;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletException;
@@ -14,17 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
 public class MealServlet extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(MealServlet.class);
-    private static CRUDInteface crud;
+    private static CrudInteface crud;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -91,7 +89,7 @@ public class MealServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-        crud = new MealDAO();
+        crud = new MealDao();
         crud.addAll(Arrays.asList(
                 new Meal(LocalDateTime.of(2019, Month.JUNE, 7, 10, 0), "Завтрак", 500),
                 new Meal(LocalDateTime.of(2019, Month.JUNE, 7, 14, 0), "Обед", 400),

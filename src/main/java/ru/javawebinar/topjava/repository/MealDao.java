@@ -4,11 +4,12 @@ import ru.javawebinar.topjava.model.Meal;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MealDao implements CrudInteface<Integer, Meal> {
-    private ConcurrentHashMap<Integer, Meal> meals = new ConcurrentHashMap<>();
+    private Map<Integer, Meal> meals = new ConcurrentHashMap<>();
     private AtomicInteger lastId = new AtomicInteger();
 
     @Override

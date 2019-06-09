@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
@@ -63,30 +64,27 @@ public class MealServlet extends HttpServlet {
                 break;
         }
 
-        doGet(req, resp); // при редиректе теряеться атрибуты request
-        // Чесно говоря не понимаю чем это плохо? Так адресс остаёться нормальным (нет .jsp в конце) и данные не теряються
-        // На мой взгял это удобно и практично
+        List<Meal> meals = crud.findAll();
+        List<MealTo> filteredMeals = MealsUtil.getFilteredWithExcess(meals, LocalTime.MIN, LocalTime.MAX, 1500);
+        req.setAttribute("meals", filteredMeals);
+        req.getRequestDispatcher("/meals.jsp").forward(req, resp);
     }
 
     private Meal createMeal(HttpServletRequest req) throws UnsupportedEncodingException {
         req.setCharacterEncoding("UTF-8");
-
-        String formDate = req.getParameter("date");
-        String formTime = req.getParameter("time");
 
         int id;
         if (req.getParameter("id") != null && !req.getParameter("id").equals(""))
             id = Integer.parseInt(req.getParameter("id"));
         else id = -1;
 
-        int year = Integer.parseInt(formDate.substring(0, formDate.indexOf("-")));
-        int month = Integer.parseInt(formDate.substring(formDate.indexOf("-") + 1, formDate.lastIndexOf("-")));
-        int date = Integer.parseInt(formDate.substring(formDate.lastIndexOf("-") + 1));
+        String formDate = req.getParameter("date");
+        String formTime = req.getParameter("time");
 
-        int hours = Integer.parseInt(formTime.substring(0, formTime.indexOf(":")));
-        int minute = Integer.parseInt(formTime.substring(formTime.indexOf(":") + 1));
+        LocalDate date = LocalDate.parse(formDate);
+        LocalTime time = LocalTime.parse(formTime);
 
-        LocalDateTime localDateTime = LocalDateTime.of(year, month, date, hours, minute);
+        LocalDateTime localDateTime = LocalDateTime.of(date, time);
 
         if (id != -1)
             return new Meal(id, localDateTime, req.getParameter("description"), Integer.parseInt(req.getParameter("calories")));
@@ -97,15 +95,6 @@ public class MealServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         crud = new MealDao();
-//        crud.addAll(Arrays.asList(
-//                new Meal(LocalDateTime.of(2019, Month.JUNE, 7, 10, 0), "Завтрак", 500),
-//                new Meal(LocalDateTime.of(2019, Month.JUNE, 7, 14, 0), "Обед", 400),
-//                new Meal(LocalDateTime.of(2019, Month.JUNE, 7, 18, 0), "Ужин", 500),
-//                new Meal(LocalDateTime.of(2019, Month.JUNE, 8, 10, 0), "Завтрак", 500),
-//                new Meal(LocalDateTime.of(2019, Month.JUNE, 8, 14, 0), "Обед", 500),
-//                new Meal(LocalDateTime.of(2019, Month.JUNE, 8, 18, 0), "Ужин", 600)
-//        ));
-
         crud.add(new Meal(1, LocalDateTime.of(2019, Month.JUNE, 7, 10, 0), "Завтрак", 500));
         crud.add(new Meal(2, LocalDateTime.of(2019, Month.JUNE, 7, 14, 0), "Обед", 400));
         crud.add(new Meal(3, LocalDateTime.of(2019, Month.JUNE, 7, 18, 0), "Ужин", 500));

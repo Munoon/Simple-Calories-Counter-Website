@@ -74,6 +74,11 @@ public class MealServlet extends HttpServlet {
         String formDate = req.getParameter("date");
         String formTime = req.getParameter("time");
 
+        int id;
+        if (req.getParameter("id") != null && !req.getParameter("id").equals(""))
+            id = Integer.parseInt(req.getParameter("id"));
+        else id = -1;
+
         int year = Integer.parseInt(formDate.substring(0, formDate.indexOf("-")));
         int month = Integer.parseInt(formDate.substring(formDate.indexOf("-") + 1, formDate.lastIndexOf("-")));
         int date = Integer.parseInt(formDate.substring(formDate.lastIndexOf("-") + 1));
@@ -83,20 +88,29 @@ public class MealServlet extends HttpServlet {
 
         LocalDateTime localDateTime = LocalDateTime.of(year, month, date, hours, minute);
 
-        return new Meal(localDateTime, req.getParameter("description"), Integer.parseInt(req.getParameter("calories")));
+        if (id != -1)
+            return new Meal(id, localDateTime, req.getParameter("description"), Integer.parseInt(req.getParameter("calories")));
+        else
+            return new Meal(localDateTime, req.getParameter("description"), Integer.parseInt(req.getParameter("calories")));
     }
 
     @Override
     public void init() throws ServletException {
-        super.init();
         crud = new MealDao();
-        crud.addAll(Arrays.asList(
-                new Meal(LocalDateTime.of(2019, Month.JUNE, 7, 10, 0), "Завтрак", 500),
-                new Meal(LocalDateTime.of(2019, Month.JUNE, 7, 14, 0), "Обед", 400),
-                new Meal(LocalDateTime.of(2019, Month.JUNE, 7, 18, 0), "Ужин", 500),
-                new Meal(LocalDateTime.of(2019, Month.JUNE, 8, 10, 0), "Завтрак", 500),
-                new Meal(LocalDateTime.of(2019, Month.JUNE, 8, 14, 0), "Обед", 500),
-                new Meal(LocalDateTime.of(2019, Month.JUNE, 8, 18, 0), "Ужин", 600)
-        ));
+//        crud.addAll(Arrays.asList(
+//                new Meal(LocalDateTime.of(2019, Month.JUNE, 7, 10, 0), "Завтрак", 500),
+//                new Meal(LocalDateTime.of(2019, Month.JUNE, 7, 14, 0), "Обед", 400),
+//                new Meal(LocalDateTime.of(2019, Month.JUNE, 7, 18, 0), "Ужин", 500),
+//                new Meal(LocalDateTime.of(2019, Month.JUNE, 8, 10, 0), "Завтрак", 500),
+//                new Meal(LocalDateTime.of(2019, Month.JUNE, 8, 14, 0), "Обед", 500),
+//                new Meal(LocalDateTime.of(2019, Month.JUNE, 8, 18, 0), "Ужин", 600)
+//        ));
+
+        crud.add(new Meal(1, LocalDateTime.of(2019, Month.JUNE, 7, 10, 0), "Завтрак", 500));
+        crud.add(new Meal(2, LocalDateTime.of(2019, Month.JUNE, 7, 14, 0), "Обед", 400));
+        crud.add(new Meal(3, LocalDateTime.of(2019, Month.JUNE, 7, 18, 0), "Ужин", 500));
+        crud.add(new Meal(4, LocalDateTime.of(2019, Month.JUNE, 8, 10, 0), "Завтрак", 500));
+        crud.add(new Meal(5, LocalDateTime.of(2019, Month.JUNE, 8, 14, 0), "Обед", 500));
+        crud.add(new Meal(6, LocalDateTime.of(2019, Month.JUNE, 8, 18, 0), "Ужин", 600));
     }
 }

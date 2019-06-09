@@ -13,12 +13,8 @@ public class MealDao implements CrudInteface<Integer, Meal> {
 
     @Override
     public void add(Meal meal) {
-        meals.putIfAbsent(lastId.addAndGet(1), meal);
-    }
-
-    @Override
-    public void addAll(List<Meal> mealsList) {
-        mealsList.forEach(this::add);
+        meal.setId(lastId.incrementAndGet());
+        meals.putIfAbsent(lastId.get(), meal);
     }
 
     @Override
@@ -33,12 +29,7 @@ public class MealDao implements CrudInteface<Integer, Meal> {
 
     @Override
     public List<Meal> findAll() {
-        List<Meal> mealList = new ArrayList<>();
-        meals.forEach((id, meal) -> {
-            meal.setId(id);
-            mealList.add(meal);
-        });
-        return mealList;
+        return new ArrayList<>(meals.values());
     }
 
     @Override

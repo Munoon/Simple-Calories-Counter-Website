@@ -13,7 +13,7 @@ public class MealDAO implements CRUDInteface<Integer, Meal> {
 
     @Override
     public void add(Meal meal) {
-        meals.put(lastId.addAndGet(1), meal);
+        meals.putIfAbsent(lastId.addAndGet(1), meal);
     }
 
     @Override

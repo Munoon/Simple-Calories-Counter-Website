@@ -34,10 +34,7 @@
                     <td>${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}</td>
                     <td>${meal.description}</td>
                     <td>${meal.calories}</td>
-
-                    <!-- Сделал голубое что бы мог различать. Я дальтоник и для меня зелённый и красный - одинаковые цвета( -->
                     <td>${meal.excess}</td>
-
                     <td>
                         <form method="post">
                             <input type="hidden" name="type" value="edit">

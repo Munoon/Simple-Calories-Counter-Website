@@ -30,13 +30,13 @@
         </thead>
         <tbody>
             <c:forEach var="meal" items="${meals}">
-                <tr>
+                <tr style="color: <c:out value="${meal.excess ? 'blue' : 'red'}" />">
                     <td>${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}</td>
                     <td>${meal.description}</td>
                     <td>${meal.calories}</td>
 
                     <!-- Сделал голубое что бы мог различать. Я дальтоник и для меня зелённый и красный - одинаковые цвета( -->
-                    <td style="color: <c:out value="${meal.excess ? 'blue' : 'red'}" />">${meal.excess}</td>
+                    <td>${meal.excess}</td>
 
                     <td>
                         <form method="post">

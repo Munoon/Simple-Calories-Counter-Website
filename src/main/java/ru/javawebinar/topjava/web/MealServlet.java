@@ -28,20 +28,17 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
-        List<Meal> meals = crud.findAll();
-        List<MealTo> filteredMeals = MealsUtil.getFilteredWithExcess(meals, LocalTime.MIN, LocalTime.MAX, 1500);
-        req.setAttribute("meals", filteredMeals);
-        req.getRequestDispatcher("/meals.jsp").forward(req, resp);
+        showMealsList(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
         if (req.getParameter("type") == null) {
             resp.sendRedirect("meals");
             return;
         }
 
-        req.setCharacterEncoding("UTF-8");
         int id = 0;
         if (req.getParameter("id") != null && !req.getParameter("id").equals(""))
             id = Integer.parseInt(req.getParameter("id"));
@@ -64,6 +61,10 @@ public class MealServlet extends HttpServlet {
                 break;
         }
 
+        showMealsList(req, resp);
+    }
+
+    private void showMealsList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Meal> meals = crud.findAll();
         List<MealTo> filteredMeals = MealsUtil.getFilteredWithExcess(meals, LocalTime.MIN, LocalTime.MAX, 1500);
         req.setAttribute("meals", filteredMeals);

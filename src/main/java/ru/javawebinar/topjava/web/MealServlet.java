@@ -39,7 +39,7 @@ public class MealServlet extends HttpServlet {
             return;
         }
 
-        int id = 0;
+        Integer id = null;
         if (req.getParameter("id") != null && !req.getParameter("id").equals(""))
             id = Integer.parseInt(req.getParameter("id"));
 
@@ -52,11 +52,11 @@ public class MealServlet extends HttpServlet {
                 req.setAttribute("edit", crud.get(id));
                 break;
             case "update":
-                crud.update(createMeal(req));
+                crud.update(createMeal(req, id));
                 logger.debug("Updated meal with id {}", id);
                 break;
             case "add":
-                crud.add(createMeal(req));
+                crud.add(createMeal(req, id));
                 logger.debug("Added meal with id {}", id);
                 break;
         }
@@ -71,13 +71,8 @@ public class MealServlet extends HttpServlet {
         req.getRequestDispatcher("/meals.jsp").forward(req, resp);
     }
 
-    private Meal createMeal(HttpServletRequest req) throws UnsupportedEncodingException {
+    private Meal createMeal(HttpServletRequest req, Integer id) throws UnsupportedEncodingException {
         req.setCharacterEncoding("UTF-8");
-
-        int id;
-        if (req.getParameter("id") != null && !req.getParameter("id").equals(""))
-            id = Integer.parseInt(req.getParameter("id"));
-        else id = -1;
 
         String formDate = req.getParameter("date");
         String formTime = req.getParameter("time");
@@ -87,14 +82,14 @@ public class MealServlet extends HttpServlet {
 
         LocalDateTime localDateTime = LocalDateTime.of(date, time);
 
-        if (id != -1)
-            return new Meal(id, localDateTime, req.getParameter("description"), Integer.parseInt(req.getParameter("calories")));
-        else
+        if (id == null)
             return new Meal(localDateTime, req.getParameter("description"), Integer.parseInt(req.getParameter("calories")));
+        else
+            return new Meal(id, localDateTime, req.getParameter("description"), Integer.parseInt(req.getParameter("calories")));
     }
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         crud = new MealDao();
         crud.add(new Meal(LocalDateTime.of(2019, Month.JUNE, 7, 10, 0), "Завтрак", 500));
         crud.add(new Meal(LocalDateTime.of(2019, Month.JUNE, 7, 14, 0), "Обед", 400));

@@ -15,12 +15,12 @@ public class MealDao implements CrudInteface<Integer, Meal> {
     @Override
     public void add(Meal meal) {
         meal.setId(lastId.incrementAndGet());
-        meals.putIfAbsent(lastId.get(), meal);
+        meals.putIfAbsent(meal.getId(), meal);
     }
 
     @Override
-    public void update(Integer id, Meal meal) {
-        meals.replace(id, meal);
+    public void update(Meal meal) {
+        meals.replace(meal.getId(), meal);
     }
 
     @Override

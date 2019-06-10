@@ -52,7 +52,7 @@ public class MealServlet extends HttpServlet {
                 req.setAttribute("edit", crud.get(id));
                 break;
             case "update":
-                crud.update(id, createMeal(req));
+                crud.update(createMeal(req));
                 logger.debug("Updated meal with id {}", id);
                 break;
             case "add":

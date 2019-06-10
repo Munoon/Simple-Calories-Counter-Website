@@ -30,7 +30,7 @@
         </thead>
         <tbody>
             <c:forEach var="meal" items="${meals}">
-                <tr style="color: <c:out value="${meal.excess ? 'blue' : 'green'}" />">
+                <tr style="color: ${meal.excess ? 'blue' : 'green'}">
                     <td>${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}</td>
                     <td>${meal.description}</td>
                     <td>${meal.calories}</td>
@@ -56,15 +56,15 @@
 
     <hr>
 
-    <h2><c:out value="${edit == null ? 'Добавить продукт' : 'Редактироваить продукт'}"/></h2>
+    <h2>${edit == null ? 'Добавить продукт' : 'Редактироваить продукт'}</h2>
     <form method="post" accept-charset="UTF-8">
-        <input type="hidden" name="type" value="<c:out value="${edit == null ? 'add' : 'update'}"/>">
+        <input type="hidden" name="type" value="${edit == null ? 'add' : 'update'}">
         <input type="hidden" name="id" value="${edit.id}">
         <input type="date" name="date" value="${edit.dateTime.toLocalDate()}" placeholder="Дата"><br>
         <input type="time" name="time" value="${edit.dateTime.toLocalTime()}" placeholder="Время"><br>
         <input type="number" name="calories" value="${edit.calories}" placeholder="Калории"><br>
         <input type="text" name="description" value="${edit.description}" placeholder="Описание"><br>
-        <input type="submit" value="<c:out value="${edit == null ? 'Добавить' : 'Обновить'}"/>">
+        <input type="submit" value="${edit == null ? 'Добавить' : 'Обновить'}">
     </form>
 </body>
 </html>

@@ -38,14 +38,16 @@ public class MealServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
 
-        Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
-                LocalDateTime.parse(request.getParameter("dateTime")),
-                request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")));
+        if (request.getParameter("description") != null) {
+            Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
+                    LocalDateTime.parse(request.getParameter("dateTime")),
+                    request.getParameter("description"),
+                    Integer.parseInt(request.getParameter("calories")));
+            controller.update(meal);
+            log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
+        }
 
-        log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
 //        repository.save(meal, SecurityUtil.authUserId());
-        controller.update(meal);
         response.sendRedirect("meals");
     }
 
@@ -55,7 +57,7 @@ public class MealServlet extends HttpServlet {
 
         switch (action == null ? "all" : action) {
             case "delete":
-                int id = getId(request);
+                int id = getRequestParam(request, "id");
                 log.info("Delete {}", id);
 //                repository.delete(id, SecurityUtil.authUserId());
                 controller.delete(id);
@@ -65,10 +67,16 @@ public class MealServlet extends HttpServlet {
             case "update":
                 final Meal meal = "create".equals(action) ?
                         new Meal(SecurityUtil.authUserId(), LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-//                        repository.get(getId(request), SecurityUtil.authUserId());
-                        controller.get(getId(request));
+//                        repository.get(getRequestParam(request), SecurityUtil.authUserId());
+                        controller.get(getRequestParam(request, "id"));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
+                break;
+            case "switchUser":
+                int user = getRequestParam(request, "user");
+                SecurityUtil.setUserId(user);
+                log.info("Switched user to {}", user);
+                response.sendRedirect("meals");
                 break;
             case "all":
             default:
@@ -81,8 +89,8 @@ public class MealServlet extends HttpServlet {
         }
     }
 
-    private int getId(HttpServletRequest request) {
-        String paramId = Objects.requireNonNull(request.getParameter("id"));
+    private int getRequestParam(HttpServletRequest request, String param) {
+        String paramId = Objects.requireNonNull(request.getParameter(param));
         return Integer.parseInt(paramId);
     }
 }

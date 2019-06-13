@@ -19,6 +19,21 @@
 <body>
 <section>
     <h3><a href="index.html">Home</a></h3>
+    <form method="get">
+        <input type="hidden" name="action" value="switchUser">
+        <input type="hidden" name="user" value="1">
+        <input type="submit" value="User 1">
+    </form>
+    <form method="get">
+        <input type="hidden" name="action" value="switchUser">
+        <input type="hidden" name="user" value="2">
+        <input type="submit" value="User 2">
+    </form>
+    <form method="get">
+        <input type="hidden" name="action" value="switchUser">
+        <input type="hidden" name="user" value="3">
+        <input type="submit" value="User 3">
+    </form>
     <hr/>
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>

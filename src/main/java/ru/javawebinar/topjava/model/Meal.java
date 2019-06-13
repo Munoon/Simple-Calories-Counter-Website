@@ -9,7 +9,7 @@ public class Meal extends AbstractBaseEntity {
 
     private final LocalDateTime dateTime;
 
-    private final String description;
+    private String description;
 
     private final int calories;
 

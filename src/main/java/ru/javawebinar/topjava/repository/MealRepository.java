@@ -11,7 +11,7 @@ public interface MealRepository {
     boolean delete(int id, int userId);
 
     // null if not found
-    Meal get(int id);
+    Meal get(int id, int userId);
 
     Collection<Meal> getAll();
 }

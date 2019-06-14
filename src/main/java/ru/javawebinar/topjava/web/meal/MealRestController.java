@@ -31,9 +31,9 @@ public class MealRestController {
         service.delete(id, SecurityUtil.authUserId());
     }
 
-    public void update(Meal meal) {
+    public void update(Meal meal, int id) {
         log.info("Update meal {}", meal.getId());
-        service.update(meal, SecurityUtil.authUserId());
+        service.update(meal, id);
     }
 
     public Meal create(Meal meal) {

@@ -2,11 +2,9 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.cglib.core.Local;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletConfig;
@@ -24,13 +22,11 @@ import java.util.Objects;
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
-//    private MealRepository repository;
     private MealRestController controller;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-//        repository = new InMemoryMealRepositoryImpl();
 
         ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         controller = appCtx.getBean(MealRestController.class);
@@ -51,7 +47,6 @@ public class MealServlet extends HttpServlet {
             log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
         }
 
-//        repository.save(meal, SecurityUtil.authUserId());
         response.sendRedirect("meals");
     }
 
@@ -63,7 +58,6 @@ public class MealServlet extends HttpServlet {
             case "delete":
                 int id = getRequestParam(request, "id");
                 log.info("Delete {}", id);
-//                repository.delete(id, SecurityUtil.authUserId());
                 controller.delete(id);
                 response.sendRedirect("meals");
                 break;
@@ -71,7 +65,6 @@ public class MealServlet extends HttpServlet {
             case "update":
                 final Meal meal = "create".equals(action) ?
                         new Meal(SecurityUtil.authUserId(), LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-//                        repository.get(getRequestParam(request), SecurityUtil.authUserId());
                         controller.get(getRequestParam(request, "id"));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
@@ -91,11 +84,7 @@ public class MealServlet extends HttpServlet {
                 endDate = endString != null && !endString.isEmpty() ? LocalDate.parse(endString) : LocalDate.MAX;
 
                 log.info("getAll from {} to {}", startDate, endDate);
-                request.setAttribute("meals",
-//                        MealsUtil.getWithExcess(repository.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
-                        MealsUtil.getFilteredWithExcess(controller.getAllWithFilterByDate(startDate, endDate),
-                                MealsUtil.DEFAULT_CALORIES_PER_DAY,
-                                LocalTime.MIN, LocalTime.MAX));
+                request.setAttribute("meals", controller.getAllWithFilterByDate(startDate, endDate));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "filterByTime":
@@ -107,19 +96,13 @@ public class MealServlet extends HttpServlet {
                 endTime = endTimeString != null && !endTimeString.isEmpty() ? LocalTime.parse(endTimeString) : LocalTime.MAX;
 
                 log.info("getAll from {} to {}", startTime, endTime);
-                request.setAttribute("meals",
-//                        MealsUtil.getWithExcess(repository.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
-                        MealsUtil.getFilteredWithExcess(controller.getAll(),
-                                MealsUtil.DEFAULT_CALORIES_PER_DAY,
-                                startTime, endTime));
+                request.setAttribute("meals", controller.getAllWithFilterByTime(startTime, endTime));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "all":
             default:
                 log.info("getAll");
-                request.setAttribute("meals",
-//                        MealsUtil.getWithExcess(repository.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
-                        MealsUtil.getWithExcess(controller.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                request.setAttribute("meals", controller.getAll());
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }

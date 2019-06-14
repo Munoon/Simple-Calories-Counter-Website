@@ -6,14 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
-import ru.javawebinar.topjava.util.DateTimeUtil;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class MealRestController {
@@ -42,16 +41,18 @@ public class MealRestController {
         return service.create(meal, SecurityUtil.authUserId());
     }
 
-    public List<Meal> getAll() {
+    public List<MealTo> getAll() {
         log.info("Get all meals");
-        return service.getAll(SecurityUtil.authUserId());
+        return MealsUtil.getWithExcess(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
     }
 
-    public List<Meal> getAllWithFilterByDate(LocalDate startDate, LocalDate endDate) {
+    public List<MealTo> getAllWithFilterByDate(LocalDate startDate, LocalDate endDate) {
         log.info("Get all meals from {} to {}", startDate, endDate);
-        return getAll()
-                .stream()
-                .filter(meal -> DateTimeUtil.isBetweenDate(meal.getDate(), startDate, endDate))
-                .collect(Collectors.toList());
+        return MealsUtil.getFilteredWithExcessByDate(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY, startDate, endDate);
+    }
+
+    public List<MealTo> getAllWithFilterByTime(LocalTime startTime, LocalTime endTime) {
+        log.info("Get all meals from {} to {}", startTime, endTime);
+        return MealsUtil.getFilteredWithExcessByTime(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY, startTime, endTime);
     }
 }

@@ -38,9 +38,15 @@
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
     <form method="get">
-        <input type="hidden" name="action" value="filterByTime">
+        <input type="hidden" name="action" value="filterByDate">
         <input type="date" name="startDate">
         <input type="date" name="endDate">
+        <input type="submit" value="Filter">
+    </form>
+    <form method="get">
+        <input type="hidden" name="action" value="filterByTime">
+        <input type="time" name="startTime">
+        <input type="time" name="endTime">
         <input type="submit" value="Filter">
     </form>
     <br><br>

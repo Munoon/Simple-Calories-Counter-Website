@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cglib.core.Local;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -80,13 +82,29 @@ public class MealServlet extends HttpServlet {
                 log.info("Switched user to {}", user);
                 response.sendRedirect("meals");
                 break;
-            case "filterByTime":
+            case "filterByDate":
                 String startString = request.getParameter("startDate");
                 String endString = request.getParameter("endDate");
-                LocalDate startTime, endTime;
+                LocalDate startDate, endDate;
 
-                startTime = startString != null && !startString.isEmpty() ? LocalDate.parse(startString) : LocalDate.MIN;
-                endTime = endString != null && !endString.isEmpty() ? LocalDate.parse(endString) : LocalDate.MAX;
+                startDate = startString != null && !startString.isEmpty() ? LocalDate.parse(startString) : LocalDate.MIN;
+                endDate = endString != null && !endString.isEmpty() ? LocalDate.parse(endString) : LocalDate.MAX;
+
+                log.info("getAll from {} to {}", startDate, endDate);
+                request.setAttribute("meals",
+//                        MealsUtil.getWithExcess(repository.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                        MealsUtil.getFilteredWithExcess(controller.getAll(SecurityUtil.authUserId()),
+                                MealsUtil.DEFAULT_CALORIES_PER_DAY,
+                                startDate, endDate));
+                request.getRequestDispatcher("/meals.jsp").forward(request, response);
+                break;
+            case "filterByTime":
+                String startTimeString = request.getParameter("startTime");
+                String endTimeString = request.getParameter("endTime");
+                LocalTime startTime, endTime;
+
+                startTime = startTimeString != null && !startTimeString.isEmpty() ? LocalTime.parse(startTimeString) : LocalTime.MIN;
+                endTime = endTimeString != null && !endTimeString.isEmpty() ? LocalTime.parse(endTimeString) : LocalTime.MAX;
 
                 log.info("getAll from {} to {}", startTime, endTime);
                 request.setAttribute("meals",

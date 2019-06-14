@@ -32,7 +32,7 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
             repository.put(user.getId(), user);
             return user;
         }
-        return repository.putIfAbsent(user.getId(), user);
+        return repository.computeIfPresent(user.getId(), (key, value) -> user);
     }
 
     @Override

@@ -55,8 +55,8 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
         log.info("getByEmail {}", email);
         return getAll()
                 .stream()
-                .filter(user -> user.getEmail() == email)
+                .filter(user -> user.getEmail().equals(email))
                 .findFirst()
-                .get();
+                .get(); // TODO check for NoSuchElementException exception
     }
 }

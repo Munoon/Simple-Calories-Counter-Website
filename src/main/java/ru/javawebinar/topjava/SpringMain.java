@@ -19,8 +19,11 @@ public class SpringMain {
             System.out.println("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));
 
             AdminRestController adminUserController = appCtx.getBean(AdminRestController.class);
-            adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Role.ROLE_ADMIN));
+            User user = adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Role.ROLE_ADMIN));
             adminUserController.getAll().forEach(System.out::println);
+
+            user.setEmail("newEmail@email.com");
+            adminUserController.update(user, user.getId());
 
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
             MealsUtil.MEALS.forEach(meal -> mealRestController.create(meal));

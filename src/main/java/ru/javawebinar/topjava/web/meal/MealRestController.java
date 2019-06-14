@@ -11,6 +11,7 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -46,21 +47,21 @@ public class MealRestController {
         return MealsUtil.getWithExcess(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
     }
 
-    public List<MealTo> getAllWithFilterByDate(LocalDate startDate, LocalDate endDate) {
+    public List<MealTo> getAllWithFilter(LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         log.info("Get all meals from {} to {}", startDate, endDate);
-        if (startDate == null || endDate == null) {
-            startDate = LocalDate.MIN;
-            endDate = LocalDate.MAX;
-        }
-        return MealsUtil.getFilteredWithExcessByDate(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY, startDate, endDate);
-    }
 
-    public List<MealTo> getAllWithFilterByTime(LocalTime startTime, LocalTime endTime) {
-        log.info("Get all meals from {} to {}", startTime, endTime);
-        if (startTime == null || endTime == null) {
-            startTime = LocalTime.MIN;
-            endTime = LocalTime.MAX;
+        if (startTime == null) startTime = LocalTime.MIN;
+        if (endTime == null) endTime = LocalTime.MAX;
+
+        if (startDate == null && endDate == null && (startTime != null || endDate != null)) {
+            return MealsUtil.getFilteredWithExcess(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY,
+                    startTime, endTime);
         }
-        return MealsUtil.getFilteredWithExcessByTime(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY, startTime, endTime);
+
+        if (startDate == null) startDate = LocalDate.MIN;
+        if (endDate == null) endDate = LocalDate.MAX;
+
+        return MealsUtil.getFilteredWithExcessByDateTime(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY,
+                LocalDateTime.of(startDate, startTime), LocalDateTime.of(endDate, endTime));
     }
 }

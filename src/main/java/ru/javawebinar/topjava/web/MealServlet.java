@@ -71,12 +71,6 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
-            case "switchUser":
-                int user = getRequestParam(request, "user");
-                SecurityUtil.setUserId(user);
-                log.info("Switched user to {}", user);
-                response.sendRedirect("meals");
-                break;
             case "filterByDate":
                 String startString = request.getParameter("startDate");
                 String endString = request.getParameter("endDate");

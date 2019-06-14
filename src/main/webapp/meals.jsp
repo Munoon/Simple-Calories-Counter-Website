@@ -19,36 +19,9 @@
 <body>
 <input>
     <h3><a href="index.html">Home</a></h3>
-    <form method="get">
-        <input type="hidden" name="action" value="switchUser">
-        <input type="hidden" name="user" value="1">
-        <input type="submit" value="User 1">
-    </form>
-    <form method="get">
-        <input type="hidden" name="action" value="switchUser">
-        <input type="hidden" name="user" value="2">
-        <input type="submit" value="User 2">
-    </form>
-    <form method="get">
-        <input type="hidden" name="action" value="switchUser">
-        <input type="hidden" name="user" value="3">
-        <input type="submit" value="User 3">
-    </form>
     <hr/>
     <h2>Meals</h2>
     <a href="meals?action=create">Add Meal</a>
-    <form method="get">
-        <input type="hidden" name="action" value="filterByDate">
-        <input type="date" name="startDate">
-        <input type="date" name="endDate">
-        <input type="submit" value="Filter">
-    </form>
-    <form method="get">
-        <input type="hidden" name="action" value="filterByTime">
-        <input type="time" name="startTime">
-        <input type="time" name="endTime">
-        <input type="submit" value="Filter">
-    </form>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>

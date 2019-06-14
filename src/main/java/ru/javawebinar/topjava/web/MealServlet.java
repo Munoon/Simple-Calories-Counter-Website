@@ -93,9 +93,9 @@ public class MealServlet extends HttpServlet {
                 log.info("getAll from {} to {}", startDate, endDate);
                 request.setAttribute("meals",
 //                        MealsUtil.getWithExcess(repository.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
-                        MealsUtil.getFilteredWithExcess(controller.getAll(SecurityUtil.authUserId()),
+                        MealsUtil.getFilteredWithExcess(controller.getAllWithFilterByDate(startDate, endDate),
                                 MealsUtil.DEFAULT_CALORIES_PER_DAY,
-                                startDate, endDate));
+                                LocalTime.MIN, LocalTime.MAX));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "filterByTime":
@@ -109,7 +109,7 @@ public class MealServlet extends HttpServlet {
                 log.info("getAll from {} to {}", startTime, endTime);
                 request.setAttribute("meals",
 //                        MealsUtil.getWithExcess(repository.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
-                        MealsUtil.getFilteredWithExcess(controller.getAll(SecurityUtil.authUserId()),
+                        MealsUtil.getFilteredWithExcess(controller.getAll(),
                                 MealsUtil.DEFAULT_CALORIES_PER_DAY,
                                 startTime, endTime));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
@@ -119,7 +119,7 @@ public class MealServlet extends HttpServlet {
                 log.info("getAll");
                 request.setAttribute("meals",
 //                        MealsUtil.getWithExcess(repository.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
-                        MealsUtil.getWithExcess(controller.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                        MealsUtil.getWithExcess(controller.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }

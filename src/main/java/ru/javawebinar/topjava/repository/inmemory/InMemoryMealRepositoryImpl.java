@@ -28,23 +28,35 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
             return meal;
         }
 
-        if (meal.getUserId() != userId)
+        try {
+            if (meal.getUserId() != userId)
+                return null;
+            // treat case: update, but absent in storage
+            return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        } catch (NullPointerException e) {
             return null;
-        // treat case: update, but absent in storage
-        return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        }
     }
 
     @Override
     public boolean delete(int id, int userId) {
-        if (repository.get(id).getUserId() == userId)
-            return repository.remove(id) != null;
-        return false;
+        try {
+            if (repository.get(id).getUserId() == userId)
+                return repository.remove(id) != null;
+            return false;
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 
     @Override
     public Meal get(int id, int userId) {
-        Meal meal = repository.get(id);
-        return meal.getUserId() == userId ? meal : null;
+        try {
+            Meal meal = repository.get(id);
+            return meal.getUserId() == userId ? meal : null;
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     @Override

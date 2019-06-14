@@ -28,7 +28,7 @@ public class SpringMain {
             Meal meal = mealRestController.get(1);
             System.out.println("First meal: " + meal);
 
-            mealRestController.delete(2);
+            mealRestController.delete(100);
             mealRestController.getAll().forEach(System.out::println);
         }
     }

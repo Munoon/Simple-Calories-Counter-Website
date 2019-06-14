@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
@@ -78,6 +79,22 @@ public class MealServlet extends HttpServlet {
                 SecurityUtil.setUserId(user);
                 log.info("Switched user to {}", user);
                 response.sendRedirect("meals");
+                break;
+            case "filterByTime":
+                String startString = request.getParameter("startDate");
+                String endString = request.getParameter("endDate");
+                LocalDate startTime, endTime;
+
+                startTime = startString != null && !startString.isEmpty() ? LocalDate.parse(startString) : LocalDate.MIN;
+                endTime = endString != null && !endString.isEmpty() ? LocalDate.parse(endString) : LocalDate.MAX;
+
+                log.info("getAll from {} to {}", startTime, endTime);
+                request.setAttribute("meals",
+//                        MealsUtil.getWithExcess(repository.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                        MealsUtil.getFilteredWithExcess(controller.getAll(SecurityUtil.authUserId()),
+                                MealsUtil.DEFAULT_CALORIES_PER_DAY,
+                                startTime, endTime));
+                request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "all":
             default:

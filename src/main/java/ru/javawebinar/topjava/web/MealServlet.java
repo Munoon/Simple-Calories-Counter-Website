@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cglib.core.Local;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
@@ -23,12 +24,13 @@ public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
     private MealRestController controller;
+    private ConfigurableApplicationContext appCtx;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
-        ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         controller = appCtx.getBean(MealRestController.class);
     }
 
@@ -78,10 +80,8 @@ public class MealServlet extends HttpServlet {
             case "filterByDate":
                 String startString = request.getParameter("startDate");
                 String endString = request.getParameter("endDate");
-                LocalDate startDate, endDate;
-
-                startDate = startString != null && !startString.isEmpty() ? LocalDate.parse(startString) : LocalDate.MIN;
-                endDate = endString != null && !endString.isEmpty() ? LocalDate.parse(endString) : LocalDate.MAX;
+                LocalDate startDate = startString.isEmpty() ? null : LocalDate.parse(startString);
+                LocalDate endDate = endString.isEmpty() ? null : LocalDate.parse(endString);
 
                 log.info("getAll from {} to {}", startDate, endDate);
                 request.setAttribute("meals", controller.getAllWithFilterByDate(startDate, endDate));
@@ -90,10 +90,8 @@ public class MealServlet extends HttpServlet {
             case "filterByTime":
                 String startTimeString = request.getParameter("startTime");
                 String endTimeString = request.getParameter("endTime");
-                LocalTime startTime, endTime;
-
-                startTime = startTimeString != null && !startTimeString.isEmpty() ? LocalTime.parse(startTimeString) : LocalTime.MIN;
-                endTime = endTimeString != null && !endTimeString.isEmpty() ? LocalTime.parse(endTimeString) : LocalTime.MAX;
+                LocalTime startTime = startTimeString.isEmpty() ? null : LocalTime.parse(startTimeString);
+                LocalTime endTime = endTimeString.isEmpty() ? null : LocalTime.parse(endTimeString);
 
                 log.info("getAll from {} to {}", startTime, endTime);
                 request.setAttribute("meals", controller.getAllWithFilterByTime(startTime, endTime));
@@ -111,5 +109,10 @@ public class MealServlet extends HttpServlet {
     private int getRequestParam(HttpServletRequest request, String param) {
         String paramId = Objects.requireNonNull(request.getParameter(param));
         return Integer.parseInt(paramId);
+    }
+
+    @Override
+    public void destroy() {
+        appCtx.close();
     }
 }

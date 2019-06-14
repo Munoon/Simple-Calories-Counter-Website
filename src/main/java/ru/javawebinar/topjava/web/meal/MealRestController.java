@@ -48,11 +48,19 @@ public class MealRestController {
 
     public List<MealTo> getAllWithFilterByDate(LocalDate startDate, LocalDate endDate) {
         log.info("Get all meals from {} to {}", startDate, endDate);
+        if (startDate == null || endDate == null) {
+            startDate = LocalDate.MIN;
+            endDate = LocalDate.MAX;
+        }
         return MealsUtil.getFilteredWithExcessByDate(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY, startDate, endDate);
     }
 
     public List<MealTo> getAllWithFilterByTime(LocalTime startTime, LocalTime endTime) {
         log.info("Get all meals from {} to {}", startTime, endTime);
+        if (startTime == null || endTime == null) {
+            startTime = LocalTime.MIN;
+            endTime = LocalTime.MAX;
+        }
         return MealsUtil.getFilteredWithExcessByTime(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY, startTime, endTime);
     }
 }

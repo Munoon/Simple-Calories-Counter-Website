@@ -9,6 +9,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MealServiceImpl implements MealService {
@@ -43,5 +44,13 @@ public class MealServiceImpl implements MealService {
     @Override
     public List<Meal> getAll() {
         return new ArrayList<>(repository.getAll());
+    }
+
+    @Override
+    public List<Meal> getAll(int userId) {
+        return new ArrayList<>(repository.getAll())
+                .stream()
+                .filter(meal -> meal.getUserId() == userId)
+                .collect(Collectors.toList());
     }
 }

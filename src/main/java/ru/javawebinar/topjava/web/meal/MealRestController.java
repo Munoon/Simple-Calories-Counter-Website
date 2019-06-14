@@ -41,4 +41,9 @@ public class MealRestController {
         log.info("Get all meals");
         return service.getAll();
     }
+
+    public List<Meal> getAll(int userId) {
+        log.info("Get all meals with id {}", userId);
+        return service.getAll(userId);
+    }
 }

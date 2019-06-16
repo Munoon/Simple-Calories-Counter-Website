@@ -6,40 +6,64 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryUserRepositoryImpl implements UserRepository {
     private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepositoryImpl.class);
+    private Map<Integer, User> repository = new ConcurrentHashMap<>();
+    private AtomicInteger lastId = new AtomicInteger();
 
     @Override
     public boolean delete(int id) {
         log.info("delete {}", id);
-        return true;
+        return repository.remove(id) != null;
     }
 
     @Override
     public User save(User user) {
         log.info("save {}", user);
-        return user;
+        if (user.isNew()) {
+            user.setId(lastId.incrementAndGet());
+            repository.put(user.getId(), user);
+            return user;
+        }
+        return repository.computeIfPresent(user.getId(), (key, value) -> user);
     }
 
     @Override
     public User get(int id) {
         log.info("get {}", id);
-        return null;
+        return repository.get(id);
     }
 
     @Override
     public List<User> getAll() {
         log.info("getAll");
-        return Collections.emptyList();
+        return repository.values()
+                .stream()
+                .sorted((firstUser, secondUser) -> {
+                    if (firstUser.getName().equals(secondUser.getName()))
+                        return firstUser.getId().compareTo(secondUser.getId());
+
+                    return firstUser.getName().compareToIgnoreCase(secondUser.getName());
+                })
+                .collect(Collectors.toList());
     }
 
     @Override
     public User getByEmail(String email) {
         log.info("getByEmail {}", email);
-        return null;
+
+        Optional<User> user = getAll()
+                .stream()
+                .filter(newUser -> newUser.getEmail().equals(email))
+                .findFirst();
+        if (user.isPresent())
+            return user.get();
+        else return null;
     }
 }

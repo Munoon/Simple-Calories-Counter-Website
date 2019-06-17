@@ -24,6 +24,7 @@ public class MealRestController {
 
     public Meal create(Meal meal) {
         ValidationUtil.checkNew(meal);
+        meal.setUserId(SecurityUtil.authUserId());
         log.info("Creating {}", meal);
         return service.create(meal);
     }
@@ -41,6 +42,7 @@ public class MealRestController {
     public void update(Meal meal, int id) {
         log.info("Updated {}", meal);
         ValidationUtil.assureIdConsistent(meal, id);
+        meal.setUserId(SecurityUtil.authUserId());
         service.update(meal, SecurityUtil.authUserId());
     }
 

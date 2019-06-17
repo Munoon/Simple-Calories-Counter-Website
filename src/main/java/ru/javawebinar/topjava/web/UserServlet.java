@@ -15,18 +15,24 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
+        log.debug("forward to users");
+        request.getRequestDispatcher("/users.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String action = req.getParameter("action");
         switch (action == null ? "default" : action) {
             case "changeUser":
-                int user = Integer.parseInt(request.getParameter("user"));
+                int user = Integer.parseInt(req.getParameter("user"));
                 SecurityUtil.setUser(user);
                 log.info("Switched user to {}", user);
-                response.sendRedirect("./index.html");
+                resp.sendRedirect("./index.html");
                 break;
 
             case "default":
                 log.debug("forward to users");
-                request.getRequestDispatcher("/users.jsp").forward(request, response);
+                req.getRequestDispatcher("/users.jsp").forward(req, resp);
         }
     }
 }

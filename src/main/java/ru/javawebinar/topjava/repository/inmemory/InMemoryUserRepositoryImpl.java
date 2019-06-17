@@ -3,6 +3,8 @@ package ru.javawebinar.topjava.repository.inmemory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import ru.javawebinar.topjava.model.AbstractBaseEntity;
+import ru.javawebinar.topjava.model.AbstractNamedEntity;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
@@ -45,12 +47,8 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
         log.info("getAll");
         return repository.values()
                 .stream()
-                .sorted((firstUser, secondUser) -> {
-                    if (firstUser.getName().equals(secondUser.getName()))
-                        return firstUser.getId().compareTo(secondUser.getId());
-
-                    return firstUser.getName().compareToIgnoreCase(secondUser.getName());
-                })
+                .sorted(Comparator.comparing(AbstractNamedEntity::getName)
+                        .thenComparing(AbstractBaseEntity::getId))
                 .collect(Collectors.toList());
     }
 

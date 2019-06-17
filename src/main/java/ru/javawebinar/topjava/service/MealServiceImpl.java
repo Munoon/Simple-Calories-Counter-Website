@@ -8,6 +8,7 @@ import ru.javawebinar.topjava.util.ValidationUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class MealServiceImpl implements MealService {
     }
 
     @Override
-    public List<Meal> getAllWithFilter(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        return repository.getAllWithFilter(userId, startDate, endDate, startTime, endTime);
+    public List<Meal> getAllWithFilter(int userId, LocalDateTime start, LocalDateTime end) {
+        return repository.getAllWithFilter(userId, start, end);
     }
 }

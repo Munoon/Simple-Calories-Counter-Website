@@ -9,6 +9,7 @@ import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Comparator;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Repository
 public class InMemoryMealRepositoryImpl implements MealRepository {
-    private static final Logger log = LoggerFactory.getLogger(InMemoryUserRepositoryImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(InMemoryMealRepositoryImpl.class);
     private Map<Integer, Meal> repository = new ConcurrentHashMap<>();
     private AtomicInteger counter = new AtomicInteger(0);
 
@@ -31,14 +32,14 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     @Override
     public Meal save(Meal meal, int userId) {
         if (meal.isNew()) {
-            log.info("Created {}", meal);
             meal.setId(counter.incrementAndGet());
             repository.put(meal.getId(), meal);
+            log.info("Created {}", meal);
             return meal;
         }
         // treat case: update, but absent in storage
         if (meal.getUserId() == userId) {
-            log.info("Updated {}", meal);
+            log.info("Update {}", meal);
             return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
         }
         return null;
@@ -50,7 +51,7 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
             return false;
         }
         if (repository.get(id).getUserId() == userId) {
-            log.info("Deleted meal {}", id);
+            log.info("Delete meal {}", id);
             return repository.remove(id) != null;
         }
         return false;
@@ -78,15 +79,10 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public List<Meal> getAllWithFilter(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+    public List<Meal> getAllWithFilter(int userId, LocalDateTime start, LocalDateTime end) {
         return getAll(userId)
                 .stream()
-                .filter(meal -> DateTimeUtil.isBetween(meal.getDate(),
-                        startDate == null ? LocalDate.MIN : startDate,
-                        endDate == null ? LocalDate.MAX : endDate))
-                .filter(meal -> DateTimeUtil.isBetween(meal.getTime(),
-                        startTime == null ? LocalTime.MIN : startTime,
-                        endTime == null ? LocalTime.MAX : endTime))
+                .filter(meal -> DateTimeUtil.isBetween(meal.getDate(), start, end))
                 .collect(Collectors.toList());
     }
 }

@@ -8,7 +8,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 public interface MealService {
-    Meal create(Meal meal);
+    Meal create(Meal meal, int userId);
     void delete(int id, int userId) throws NotFoundException;
     Meal get(int id, int userId) throws NotFoundException;
     void update(Meal meal, int userId);

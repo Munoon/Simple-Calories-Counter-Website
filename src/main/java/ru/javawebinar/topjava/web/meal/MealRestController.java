@@ -26,7 +26,7 @@ public class MealRestController {
         ValidationUtil.checkNew(meal);
         meal.setUserId(SecurityUtil.authUserId());
         log.info("Creating {}", meal);
-        return service.create(meal);
+        return service.create(meal, meal.getUserId());
     }
 
     public void delete(int id) {

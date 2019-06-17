@@ -25,11 +25,11 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(this::save);
+        MealsUtil.MEALS.forEach(meal -> save(meal, meal.getUserId()));
     }
 
     @Override
-    public Meal save(Meal meal) {
+    public Meal save(Meal meal, int userId) {
         if (meal.isNew()) {
             log.info("Created {}", meal);
             meal.setId(counter.incrementAndGet());
@@ -37,8 +37,11 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
             return meal;
         }
         // treat case: update, but absent in storage
-        log.info("Updated {}", meal);
-        return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        if (meal.getUserId() == userId) {
+            log.info("Updated {}", meal);
+            return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
+        }
+        return null;
     }
 
     @Override

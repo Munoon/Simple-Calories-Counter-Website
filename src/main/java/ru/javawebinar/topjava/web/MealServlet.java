@@ -16,7 +16,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -68,6 +70,23 @@ public class MealServlet extends HttpServlet {
                         controller.get(getId(request));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
+                break;
+            case "doFilter":
+                log.info("Filter");
+                String startDateStr = request.getParameter("startDate");
+                String endDateStr = request.getParameter("endDate");
+                String startTimeStr = request.getParameter("startTime");
+                String endTimeStr = request.getParameter("endTime");
+
+                LocalDate startDate = startDateStr.isEmpty() ? null : LocalDate.parse(startDateStr);
+                LocalDate endDate = endDateStr.isEmpty() ? null : LocalDate.parse(endDateStr);
+                LocalTime startTime = startTimeStr.isEmpty() ? null : LocalTime.parse(startTimeStr);
+                LocalTime endTime = endTimeStr.isEmpty() ? null : LocalTime.parse(endTimeStr);
+
+                request.setAttribute("meals",
+                        MealsUtil.getWithExcess(controller.getAllWithFilter(startDate, endDate, startTime, endTime),
+                                MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "all":
             default:

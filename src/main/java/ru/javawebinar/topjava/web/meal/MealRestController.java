@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.DateTimeUtil;
+import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.ValidationUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
@@ -38,8 +40,9 @@ public class MealRestController {
         return service.get(id, SecurityUtil.authUserId());
     }
 
-    public void update(Meal meal) {
+    public void update(Meal meal, int id) {
         log.info("Updated {}", meal);
+        ValidationUtil.assureIdConsistent(meal, id);
         service.update(meal, SecurityUtil.authUserId());
     }
 
@@ -47,8 +50,13 @@ public class MealRestController {
         return service.getAll(SecurityUtil.authUserId());
     }
 
-    public List<Meal> getAllWithFilter(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        return service.getAllWithFilter(SecurityUtil.authUserId(), startDate, endDate, startTime, endTime);
+    public List<MealTo> getAllMealTo() {
+        return MealsUtil.getWithExcess(getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+    }
+
+    public List<MealTo> getAllWithFilter(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        return MealsUtil.getWithExcess(service.getAllWithFilter(SecurityUtil.authUserId(), startDate, endDate, startTime, endTime),
+                MealsUtil.DEFAULT_CALORIES_PER_DAY);
     }
 
 }

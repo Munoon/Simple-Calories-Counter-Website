@@ -48,7 +48,7 @@ public class MealServlet extends HttpServlet {
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
         if (meal.isNew())
             controller.create(meal);
-        else controller.update(meal);
+        else controller.update(meal, meal.getId());
         response.sendRedirect("meals");
     }
 
@@ -83,16 +83,13 @@ public class MealServlet extends HttpServlet {
                 LocalTime startTime = startTimeStr.isEmpty() ? null : LocalTime.parse(startTimeStr);
                 LocalTime endTime = endTimeStr.isEmpty() ? null : LocalTime.parse(endTimeStr);
 
-                request.setAttribute("meals",
-                        MealsUtil.getWithExcess(controller.getAllWithFilter(startDate, endDate, startTime, endTime),
-                                MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                request.setAttribute("meals", controller.getAllWithFilter(startDate, endDate, startTime, endTime));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "all":
             default:
                 log.info("getAll");
-                request.setAttribute("meals",
-                        MealsUtil.getWithExcess(controller.getAll(), MealsUtil.DEFAULT_CALORIES_PER_DAY));
+                request.setAttribute("meals", controller.getAllMealTo());
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }

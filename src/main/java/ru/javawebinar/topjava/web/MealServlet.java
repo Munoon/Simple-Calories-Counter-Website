@@ -30,7 +30,6 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        super.init(config);
         applicationContext = new ClassPathXmlApplicationContext("spring/spring-app.xml");
         controller = applicationContext.getBean(MealRestController.class);
     }
@@ -103,7 +102,6 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void destroy() {
-        super.destroy();
         applicationContext.close();
     }
 }

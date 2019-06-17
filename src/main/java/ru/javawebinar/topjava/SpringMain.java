@@ -5,7 +5,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 import ru.javawebinar.topjava.web.user.AdminRestController;
 
@@ -20,7 +19,6 @@ public class SpringMain {
             adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Role.ROLE_ADMIN));
 
             MealRestController mealRestController = appCtx.getBean(MealRestController.class);
-            MealsUtil.MEALS.forEach(mealRestController::create);
             Meal meal = mealRestController.get(1);
             System.out.println(meal);
             mealRestController.delete(2);

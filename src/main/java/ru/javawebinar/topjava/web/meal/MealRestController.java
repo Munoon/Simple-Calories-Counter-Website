@@ -41,8 +41,8 @@ public class MealRestController {
         service.update(meal, SecurityUtil.authUserId());
     }
 
-    public List<MealTo> getAll() {
-        return MealsUtil.getWithExcess(service.getAll(SecurityUtil.authUserId()), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+    public List<Meal> getAll() {
+        return service.getAll(SecurityUtil.authUserId());
     }
 
 }

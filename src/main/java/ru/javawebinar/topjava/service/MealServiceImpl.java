@@ -26,7 +26,7 @@ public class MealServiceImpl implements MealService {
 
     @Override
     public void delete(int id, int userId) throws NotFoundException {
-        ValidationUtil.checkNotFoundWithId(repository.get(id, userId), id);
+        ValidationUtil.checkNotFoundWithId(repository.delete(id, userId), id);
     }
 
     @Override

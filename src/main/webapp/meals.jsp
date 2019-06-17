@@ -8,7 +8,7 @@
     <title>Meal list</title>
     <style>
         .normal {
-            color: green;
+            color: blue;
         }
 
         .excess {

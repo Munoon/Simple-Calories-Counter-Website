@@ -48,15 +48,7 @@ public class MealRestController {
     }
 
     public List<Meal> getAllWithFilter(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        return service.getAll(SecurityUtil.authUserId())
-                .stream()
-                .filter(meal -> DateTimeUtil.isBetween(meal.getDate(),
-                        startDate == null ? LocalDate.MIN : startDate,
-                        endDate == null ? LocalDate.MAX : endDate))
-                .filter(meal -> DateTimeUtil.isBetween(meal.getTime(),
-                        startTime == null ? LocalTime.MIN : startTime,
-                        endTime == null ? LocalTime.MAX : endTime))
-                .collect(Collectors.toList());
+        return service.getAllWithFilter(SecurityUtil.authUserId(), startDate, endDate, startTime, endTime);
     }
 
 }

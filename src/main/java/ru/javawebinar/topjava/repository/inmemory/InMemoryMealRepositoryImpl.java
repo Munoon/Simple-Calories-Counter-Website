@@ -7,6 +7,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
+import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,7 +25,7 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     private AtomicInteger counter = new AtomicInteger(0);
 
     {
-        MealsUtil.MEALS.forEach(meal -> save(meal, meal.getUserId()));
+        MealsUtil.MEALS.forEach(meal -> save(meal, SecurityUtil.authUserId()));
     }
 
     @Override
@@ -48,11 +49,8 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
         if (repository.getOrDefault(userId, new HashMap<>()).get(id) == null) {
             return false;
         }
-        if (repository.get(userId).get(id).getUserId() == userId) {
-            log.info("Delete meal {}", id);
-            return repository.get(userId).remove(id) != null;
-        }
-        return false;
+        log.info("Delete meal {}", id);
+        return repository.get(userId).remove(id) != null;
     }
 
     @Override
@@ -61,9 +59,7 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
         Meal meal = repository.getOrDefault(userId, new HashMap<>()).get(id);
         if (meal == null)
             return null;
-        if (meal.getUserId() == userId)
-            return meal;
-        return null;
+        return meal;
     }
 
     @Override

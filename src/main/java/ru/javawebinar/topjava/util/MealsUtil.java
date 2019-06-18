@@ -18,15 +18,15 @@ import static java.util.stream.Collectors.toList;
 
 public class MealsUtil {
     public static final List<Meal> MEALS = Arrays.asList(
-            new Meal(LocalDateTime.of(2019, Month.JUNE, 17, 13, 0), "Обед", 1, 1000),
-            new Meal(LocalDateTime.of(2019, Month.JUNE, 17, 20, 0), "Ужин", 1, 500),
-            new Meal(LocalDateTime.of(2019, Month.JUNE, 17, 10, 0), "Завтрак", 1, 500),
-            new Meal(LocalDateTime.of(2019, Month.JUNE, 18, 10, 0), "Завтрак", 1, 1000),
-            new Meal(LocalDateTime.of(2019, Month.JUNE, 18, 13, 0), "Обед", 1, 500),
-            new Meal(LocalDateTime.of(2019, Month.JUNE, 18, 20, 0), "Ужин", 1, 510),
-            new Meal(LocalDateTime.of(2019, Month.JUNE, 17, 10, 0), "Завтрак", 2, 500),
-            new Meal(LocalDateTime.of(2019, Month.JUNE, 17, 14, 0), "Обед", 2, 1000),
-            new Meal(LocalDateTime.of(2019, Month.JUNE, 18, 10, 0), "Завтрак", 2, 500)
+            new Meal(LocalDateTime.of(2019, Month.JUNE, 17, 13, 0), "Обед", 1000),
+            new Meal(LocalDateTime.of(2019, Month.JUNE, 17, 20, 0), "Ужин", 500),
+            new Meal(LocalDateTime.of(2019, Month.JUNE, 17, 10, 0), "Завтрак", 500),
+            new Meal(LocalDateTime.of(2019, Month.JUNE, 18, 10, 0), "Завтрак", 1000),
+            new Meal(LocalDateTime.of(2019, Month.JUNE, 18, 13, 0), "Обед", 500),
+            new Meal(LocalDateTime.of(2019, Month.JUNE, 18, 20, 0), "Ужин", 510),
+            new Meal(LocalDateTime.of(2019, Month.JUNE, 17, 10, 0), "Завтрак", 500),
+            new Meal(LocalDateTime.of(2019, Month.JUNE, 17, 14, 0), "Обед", 1000),
+            new Meal(LocalDateTime.of(2019, Month.JUNE, 18, 10, 0), "Завтрак", 500)
     );
 
     public static final int DEFAULT_CALORIES_PER_DAY = 2000;

@@ -18,9 +18,9 @@ import static java.util.stream.Collectors.toList;
 
 public class MealsUtil {
     public static final List<Meal> MEALS = Arrays.asList(
-            new Meal(LocalDateTime.of(2019, Month.JUNE, 17, 10, 0), "Завтрак", 1, 500),
             new Meal(LocalDateTime.of(2019, Month.JUNE, 17, 13, 0), "Обед", 1, 1000),
             new Meal(LocalDateTime.of(2019, Month.JUNE, 17, 20, 0), "Ужин", 1, 500),
+            new Meal(LocalDateTime.of(2019, Month.JUNE, 17, 10, 0), "Завтрак", 1, 500),
             new Meal(LocalDateTime.of(2019, Month.JUNE, 18, 10, 0), "Завтрак", 1, 1000),
             new Meal(LocalDateTime.of(2019, Month.JUNE, 18, 13, 0), "Обед", 1, 500),
             new Meal(LocalDateTime.of(2019, Month.JUNE, 18, 20, 0), "Ужин", 1, 510),

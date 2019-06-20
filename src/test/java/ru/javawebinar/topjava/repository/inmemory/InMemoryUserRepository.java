@@ -19,6 +19,9 @@ public class InMemoryUserRepository extends InMemoryBaseRepository<User> impleme
     static final int USER_ID = 1;
     static final int ADMIN_ID = 2;
 
+    public InMemoryUserRepository() {
+    }
+
     public void init() {
         entryMap.clear();
         entryMap.put(UserTestData.USER_ID, USER);

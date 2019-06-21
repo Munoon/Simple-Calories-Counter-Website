@@ -84,7 +84,7 @@ public class MealServiceTest {
         updated.setDescription("Test Description");
         updated.setCalories(999);
         service.update(updated, USER_ID);
-        MealTestData.assertMatchIgnoreDateTime(service.get(FIRST_MEAL_ID, USER_ID), updated);
+        MealTestData.assertMatch(service.get(FIRST_MEAL_ID, USER_ID), updated);
     }
 
     @Test

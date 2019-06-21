@@ -21,20 +21,11 @@ public class MealTestData {
             new Meal(100007, LocalDateTime.of(2019, 6, 21, 18, 0, 0), "Ужин", 700)
     );
 
-    public static void assertMatchIgnoreDateTime(Meal actual, Meal expected) {
-        assertThat(actual).isEqualToIgnoringGivenFields(expected, "dateTime");
-    }
-
     public static void assertMatch(Meal actual, Meal expected) {
         assertThat(actual).isEqualTo(expected);
     }
 
-
     public static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {
         assertThat(actual).isEqualTo(expected);
-    }
-
-    public static void assertMatchIgnoreDateTime(Iterable<Meal> actual, Iterable<Meal> expected) {
-        assertThat(actual).usingElementComparatorIgnoringFields("dateTime").isEqualTo(expected);
     }
 }

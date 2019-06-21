@@ -47,7 +47,8 @@ public class MealServiceTest {
     public void delete() {
         List<Meal> all = service.getAll(USER_ID);
         service.delete(FIRST_MEAL_ID, USER_ID);
-        assertMatch(service.getAll(USER_ID), all.get(1), all.get(2), all.get(3), all.get(4), all.get(5));
+        all.remove(FIRST_MEAL);
+        assertMatch(service.getAll(USER_ID), all);
     }
 
     @Test

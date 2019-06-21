@@ -31,9 +31,10 @@ CREATE SEQUENCE global_meals START WITH 100000;
 CREATE TABLE meals
 (
     id             INTEGER PRIMARY KEY DEFAULT nextval('global_meals'),
-    dateTime       TIMESTAMP DEFAULT now()    NOT NULL,
-    description    VARCHAR                    NOT NULL,
-    calories       INTEGER                    NOT NULL,
-    user_id        INTEGER                    NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    dateTime       TIMESTAMP DEFAULT now()           NOT NULL,
+    description    VARCHAR                           NOT NULL,
+    calories       INTEGER                           NOT NULL,
+    user_id        INTEGER                           NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    UNIQUE (dateTime, user_id)
 );

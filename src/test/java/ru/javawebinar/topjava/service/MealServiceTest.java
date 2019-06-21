@@ -4,23 +4,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.util.DateTimeUtil;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.javawebinar.topjava.MealTestData.*;
+import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 @ContextConfiguration({
@@ -96,5 +95,42 @@ public class MealServiceTest {
         newMeal.setId(created.getId());
         list.add(newMeal);
         assertMatch(service.getAll(USER_ID), list);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void deleteUnknownMeal() {
+        service.delete(9999999, USER_ID);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void deleteMealWithUnknownUser() {
+        service.delete(FIRST_MEAL_ID, 999999999);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void deleteUnknownMealWithUnknownUser() {
+        service.delete(999999999, 999999999);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void deleteMealWithOtherUser() {
+        service.delete(FIRST_MEAL_ID, ADMIN_ID);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getUnknownId() {
+        service.get(999999, USER_ID);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getWithOtherUser() {
+        service.get(FIRST_MEAL_ID, ADMIN_ID);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void updateOtherUserMeal() {
+        Meal meal = service.get(FIRST_MEAL_ID, USER_ID);
+        meal.setDescription("Test");
+        service.update(meal, ADMIN_ID);
     }
 }

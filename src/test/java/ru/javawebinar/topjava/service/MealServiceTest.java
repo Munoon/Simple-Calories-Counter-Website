@@ -16,7 +16,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -48,29 +47,22 @@ public class MealServiceTest {
     public void delete() {
         List<Meal> all = service.getAll(USER_ID);
         service.delete(FIRST_MEAL_ID, USER_ID);
-        List<Meal> collect = all.stream().filter(meal -> meal.getId() != FIRST_MEAL_ID).collect(Collectors.toList());
-        assertMatch(service.getAll(USER_ID), collect);
+        assertMatch(service.getAll(USER_ID), all.get(1), all.get(2), all.get(3), all.get(4), all.get(5));
     }
 
     @Test
     public void getBetweenDates() {
         LocalDate date = LocalDate.of(2019, 6, 20);
-        List<Meal> expected = FIRST_USER_MEALS
-                .stream()
-                .filter(meal -> meal.getDate().isEqual(date))
-                .collect(Collectors.toList());
-        assertMatch(service.getBetweenDates(date, date, USER_ID), expected);
+        assertMatch(service.getBetweenDates(date, date, USER_ID),
+                FIRST_USER_MEALS.get(0), FIRST_USER_MEALS.get(1), FIRST_USER_MEALS.get(2));
     }
 
     @Test
     public void getBetweenDateTimes() {
         LocalDateTime start = LocalDateTime.of(2019, 6, 20, 12, 0, 0);
         LocalDateTime end = LocalDateTime.of(2019, 6, 21, 14, 0, 0);
-        List<Meal> expected = FIRST_USER_MEALS
-                .stream()
-                .filter(meal -> meal.getDateTime().isBefore(end) && meal.getDateTime().isAfter(start))
-                .collect(Collectors.toList());
-        assertMatch(service.getBetweenDateTimes(start, end, USER_ID), expected);
+        assertMatch(service.getBetweenDateTimes(start, end, USER_ID),
+                FIRST_USER_MEALS.get(1), FIRST_USER_MEALS.get(2), FIRST_USER_MEALS.get(3));
     }
 
     @Test

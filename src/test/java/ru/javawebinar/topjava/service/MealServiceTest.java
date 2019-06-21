@@ -15,6 +15,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static ru.javawebinar.topjava.MealTestData.*;
@@ -45,7 +46,7 @@ public class MealServiceTest {
 
     @Test
     public void delete() {
-        List<Meal> all = service.getAll(USER_ID);
+        List<Meal> all = new ArrayList<>(FIRST_USER_MEALS);
         service.delete(FIRST_MEAL_ID, USER_ID);
         all.remove(FIRST_MEAL);
         assertMatch(service.getAll(USER_ID), all);

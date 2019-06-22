@@ -10,6 +10,7 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.service.jdbc.JdbcMealService;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
@@ -35,7 +36,7 @@ public class MealServiceTest {
     }
 
     @Autowired
-    MealService service;
+    JdbcMealService service;
 
     @Test
     public void get() {

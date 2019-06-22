@@ -11,6 +11,7 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.service.jdbc.JdbcUserService;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.Collections;
@@ -34,7 +35,7 @@ public class UserServiceTest {
     }
 
     @Autowired
-    private UserService service;
+    private JdbcUserService service;
 
     @Test
     public void create() throws Exception {

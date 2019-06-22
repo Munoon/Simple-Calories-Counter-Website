@@ -7,6 +7,7 @@ import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.inmemory.InMemoryUserRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
+import ru.javawebinar.topjava.web.user.inMemory.InMemoryAdminRestController;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -15,13 +16,13 @@ import static ru.javawebinar.topjava.UserTestData.ADMIN;
 
 public class InMemoryAdminRestControllerTest {
     private static ConfigurableApplicationContext appCtx;
-    private static TestAdminRestController controller;
+    private static InMemoryAdminRestController controller;
 
     @BeforeClass
     public static void beforeClass() {
         appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml");
         System.out.println("\n" + Arrays.toString(appCtx.getBeanDefinitionNames()) + "\n");
-        controller = appCtx.getBean(TestAdminRestController.class);
+        controller = appCtx.getBean(InMemoryAdminRestController.class);
     }
 
     @AfterClass

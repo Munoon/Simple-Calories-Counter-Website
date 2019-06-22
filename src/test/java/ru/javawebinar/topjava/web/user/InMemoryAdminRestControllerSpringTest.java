@@ -11,6 +11,7 @@ import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.inmemory.InMemoryUserRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
+import ru.javawebinar.topjava.web.user.inMemory.InMemoryAdminRestController;
 
 import java.util.Collection;
 
@@ -24,7 +25,7 @@ import static ru.javawebinar.topjava.UserTestData.ADMIN;
 public class InMemoryAdminRestControllerSpringTest {
 
     @Autowired
-    private TestAdminRestController controller;
+    private InMemoryAdminRestController controller;
 
     @Autowired
     private InMemoryUserRepository repository;

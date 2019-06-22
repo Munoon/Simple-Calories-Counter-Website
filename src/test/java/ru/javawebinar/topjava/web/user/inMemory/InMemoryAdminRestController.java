@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.web.user;
+package ru.javawebinar.topjava.web.user.inMemory;
 
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.User;
@@ -6,7 +6,7 @@ import ru.javawebinar.topjava.model.User;
 import java.util.List;
 
 @Controller
-public class TestAdminRestController extends TestAbstractUserController {
+public class InMemoryAdminRestController extends InMemoryAbstractUserController {
 
     @Override
     public List<User> getAll() {

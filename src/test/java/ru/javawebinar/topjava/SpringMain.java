@@ -6,7 +6,7 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.web.meal.MealRestController;
-import ru.javawebinar.topjava.web.user.TestAdminRestController;
+import ru.javawebinar.topjava.web.user.inMemory.InMemoryAdminRestController;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -19,7 +19,7 @@ public class SpringMain {
         // java 7 automatic resource management
         try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml")) {
             System.out.println("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));
-            TestAdminRestController adminUserController = appCtx.getBean(TestAdminRestController.class);
+            InMemoryAdminRestController adminUserController = appCtx.getBean(InMemoryAdminRestController.class);
             adminUserController.create(new User(null, "userName", "email@mail.ru", "password", Role.ROLE_ADMIN));
             System.out.println();
 

@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.web.user;
+package ru.javawebinar.topjava.web.user.inMemory;
 
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.User;
@@ -6,7 +6,7 @@ import ru.javawebinar.topjava.model.User;
 import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 @Controller
-public class TestProfileRestController extends TestAbstractUserController {
+public class InMemoryProfileRestController extends InMemoryAbstractUserController {
 
     public User get() {
         return super.get(authUserId());

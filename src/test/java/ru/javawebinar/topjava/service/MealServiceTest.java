@@ -46,17 +46,15 @@ public class MealServiceTest {
 
     @Test
     public void delete() {
-        List<Meal> all = new ArrayList<>(FIRST_USER_MEALS);
         service.delete(FIRST_MEAL_ID, USER_ID);
-        all.remove(FIRST_MEAL);
-        assertMatch(service.getAll(USER_ID), all);
+        assertMatch(service.getAll(USER_ID), SECOND_MEAL, THIRD_MEAL, FOURTH_MEAL, FIFTH_MEAL, SIXTH_MEAL);
     }
 
     @Test
     public void getBetweenDates() {
         LocalDate date = LocalDate.of(2019, 6, 20);
         assertMatch(service.getBetweenDates(date, date, USER_ID),
-                FIRST_USER_MEALS.get(0), FIRST_USER_MEALS.get(1), FIRST_USER_MEALS.get(2));
+                FIRST_MEAL, SECOND_MEAL, THIRD_MEAL);
     }
 
     @Test
@@ -64,12 +62,13 @@ public class MealServiceTest {
         LocalDateTime start = LocalDateTime.of(2019, 6, 20, 12, 0, 0);
         LocalDateTime end = LocalDateTime.of(2019, 6, 21, 14, 0, 0);
         assertMatch(service.getBetweenDateTimes(start, end, USER_ID),
-                FIRST_USER_MEALS.get(1), FIRST_USER_MEALS.get(2), FIRST_USER_MEALS.get(3));
+                FIRST_MEAL, SECOND_MEAL, THIRD_MEAL, FOURTH_MEAL, FIFTH_MEAL);
     }
 
     @Test
     public void getAll() {
-        assertMatch(service.getAll(USER_ID), FIRST_USER_MEALS);
+        assertMatch(service.getAll(USER_ID),
+                FIRST_MEAL, SECOND_MEAL, THIRD_MEAL, FOURTH_MEAL, FIFTH_MEAL, SIXTH_MEAL);
     }
 
     @Test
@@ -83,7 +82,7 @@ public class MealServiceTest {
 
     @Test
     public void create() {
-        List<Meal> list = new ArrayList<>(service.getAll(USER_ID));
+        List<Meal> list = service.getAll(USER_ID);
         Meal newMeal = new Meal(LocalDateTime.of(2019, 6, 22, 14, 0, 0), "Тест Обед", 200);
         Meal created = service.create(newMeal, USER_ID);
         newMeal.setId(created.getId());

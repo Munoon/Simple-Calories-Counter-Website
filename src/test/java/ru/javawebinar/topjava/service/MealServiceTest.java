@@ -1,13 +1,17 @@
 package ru.javawebinar.topjava.service;
 
+import ch.qos.logback.core.pattern.color.ANSIConstants;
+import javafx.scene.paint.Color;
 import org.junit.AfterClass;
+import org.junit.AssumptionViolatedException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.rules.ExternalResource;
+import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
-import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -20,6 +24,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -32,7 +37,8 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
-    private static Map<String, Long> testsStatistics = new HashMap<>();
+    private static Map<String, Long> testsStatistic = new HashMap<>();
+    private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
 
     @Autowired
     private MealService service;
@@ -41,34 +47,76 @@ public class MealServiceTest {
     public ExpectedException exception = ExpectedException.none();
 
     @Rule
-    public ExternalResource resource = new ExternalResource() {
-        private long startTime;
-        private String testName;
-
-        @Override
-        public Statement apply(Statement base, Description description) {
-            testName = description.getMethodName(); // getDisplayName is too large
-            return super.apply(base, description);
+    public Stopwatch stopwatch = new Stopwatch() {
+        private void logAndAddToStatisticsMap(long nanos, String testName, String status) {
+            long time = TimeUnit.NANOSECONDS.toMillis(nanos);
+            log.info("Test {}, status: {}, time: {} ms", testName, status, time);
+            testsStatistic.put(testName, time);
         }
 
         @Override
-        protected void before() throws Throwable {
-            startTime = System.currentTimeMillis();
+        protected void succeeded(long nanos, Description description) {
+            logAndAddToStatisticsMap(nanos, description.getMethodName(), "succes");
+            super.succeeded(nanos, description);
         }
 
         @Override
-        protected void after() {
-            long time = System.currentTimeMillis() - startTime;
-            testsStatistics.put(testName, time);
-            System.out.format("Test %s: spent %d ms\n", testName, time);
+        protected void failed(long nanos, Throwable e, Description description) {
+            logAndAddToStatisticsMap(nanos, description.getMethodName(), "failed");
+            super.failed(nanos, e, description);
+        }
+
+        @Override
+        protected void skipped(long nanos, AssumptionViolatedException e, Description description) {
+            logAndAddToStatisticsMap(nanos, description.getMethodName(), "skipped");
+            super.skipped(nanos, e, description);
+        }
+
+        @Override
+        protected void finished(long nanos, Description description) {
+            logAndAddToStatisticsMap(nanos, description.getMethodName(), "finished");
+            super.finished(nanos, description);
         }
     };
 
     @AfterClass
-    public static void afterClass() {
-        System.out.println("Meal test statistics: ");
-        testsStatistics.forEach((testName, time) -> System.out.println(testName + " - " + time + " ms"));
+    public static void showStatistic() {
+        Long totalTime = testsStatistic.values().stream().reduce((long) 0, (value, aLong) -> aLong += value);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(totalTime);
+        long milliSeconds = totalTime - seconds * 1000;
+        log.info("\u001B[35m Meal Service tests [Total time - {} sec {} ms]\u001B[0m", seconds, milliSeconds);
+        testsStatistic.forEach((testName, time) -> log.info("\u001B[35mTest '{}' takes {} ms\u001B[0m", testName, time));
     }
+
+//    @Rule
+//    public ExternalResource resource = new ExternalResource() {
+//        private long startTime;
+//        private String testName;
+//
+//        @Override
+//        public Statement apply(Statement base, Description description) {
+//            testName = description.getMethodName(); // getDisplayName is too large
+//            return super.apply(base, description);
+//        }
+//
+//        @Override
+//        protected void before() throws Throwable {
+//            startTime = System.currentTimeMillis();
+//        }
+//
+//        @Override
+//        protected void after() {
+//            long time = System.currentTimeMillis() - startTime;
+//            testsStatistic.put(testName, time);
+//            System.out.format("Test %s: spent %d ms\n", testName, time);
+//        }
+//    };
+//
+//    @AfterClass
+//    public static void afterClass() {
+//        System.out.println("Meal test statistics: ");
+//        testsStatistic.forEach((testName, time) -> System.out.println(testName + " - " + time + " ms"));
+//    }
 
     @Test
     public void delete() throws Exception {

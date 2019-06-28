@@ -8,7 +8,6 @@ import org.junit.rules.ExternalResource;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.Statement;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -19,7 +18,6 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +33,9 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
     private static Map<String, Long> testsStatistics = new HashMap<>();
+
+    @Autowired
+    private MealService service;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -68,9 +69,6 @@ public class MealServiceTest {
         System.out.println("Meal test statistics: ");
         testsStatistics.forEach((testName, time) -> System.out.println(testName + " - " + time + " ms"));
     }
-
-    @Autowired
-    private MealService service;
 
     @Test
     public void delete() throws Exception {

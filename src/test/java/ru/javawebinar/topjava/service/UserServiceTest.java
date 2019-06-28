@@ -8,8 +8,6 @@ import org.junit.rules.ExternalResource;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.Statement;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ContextConfiguration;
@@ -32,6 +30,9 @@ import static ru.javawebinar.topjava.UserTestData.*;
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class UserServiceTest {
     private static Map<String, Long> testsStatistics = new HashMap<>();
+
+    @Autowired
+    private UserService service;
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -65,9 +66,6 @@ public class UserServiceTest {
         System.out.println("User test statistics: ");
         testsStatistics.forEach((testName, time) -> System.out.format("%s - %d ms\n", testName, time));
     }
-
-    @Autowired
-    private UserService service;
 
     @Test
     public void create() throws Exception {

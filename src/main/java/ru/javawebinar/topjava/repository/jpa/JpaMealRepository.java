@@ -25,20 +25,18 @@ public class JpaMealRepository implements MealRepository {
 
         if (meal.isNew()) {
             em.persist(meal);
+            return meal;
         } else {
-//            em.createNamedQuery(Meal.UPDATE, Meal.class)
-//                    .setParameter("id", meal.getId())
-//                    .setParameter("dateTime", meal.getDateTime())
-//                    .setParameter("calories", meal.getCalories())
-//                    .setParameter("description", meal.getDescription())
-//                    .setParameter("userId", userId)
-//                    .executeUpdate();
-//            em.refresh(meal);
-
-            em.merge(meal);
+            em.createNamedQuery(Meal.UPDATE)
+                    .setParameter("id", meal.getId())
+                    .setParameter("dateTime", meal.getDateTime())
+                    .setParameter("calories", meal.getCalories())
+                    .setParameter("description", meal.getDescription())
+                    .setParameter("userId", userId)
+                    .executeUpdate();
+            return get(meal.getId(), userId);
         }
 
-        return meal;
     }
 
     @Override

@@ -1,12 +1,10 @@
 package ru.javawebinar.topjava.repository.jpa;
 
-import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -29,16 +27,12 @@ public class JpaMealRepository implements MealRepository {
             em.persist(meal);
             return meal;
         } else {
-            em.createNamedQuery(Meal.UPDATE)
-                    .setParameter("id", meal.getId())
-                    .setParameter("dateTime", meal.getDateTime())
-                    .setParameter("calories", meal.getCalories())
-                    .setParameter("description", meal.getDescription())
-                    .setParameter("userId", userId)
-                    .executeUpdate();
-            return get(meal.getId(), userId);
+            Meal getMeal = get(meal.getId(), userId);
+            if (getMeal != null) {
+                return em.merge(meal);
+            }
+            return null;
         }
-
     }
 
     @Override

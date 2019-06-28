@@ -1,8 +1,10 @@
 ---
 exclude_paths:
   - 'src/main/webapp/**'
+  - 'src/main/resources/db/initDB_hsql.sql'
   - 'README.md'
   - 'cv.md'
   - 'description.md'
   - 'graduation.md'
   - 'ReleaseNotes.md'
+  - 'doc/lesson07.md'

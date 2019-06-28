@@ -3,6 +3,8 @@ package ru.javawebinar.topjava.model;
 import ru.javawebinar.topjava.util.LocalDateTimeConvertor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -32,9 +34,11 @@ public class Meal extends AbstractBaseEntity {
 
     @Column(name = "date_time", nullable = false, unique = true)
     @Convert(converter = LocalDateTimeConvertor.class)
+    @NotNull
     private LocalDateTime dateTime;
 
     @Column(name = "description", nullable = false)
+    @NotBlank
     private String description;
 
     @Column(name = "calories", nullable = false)

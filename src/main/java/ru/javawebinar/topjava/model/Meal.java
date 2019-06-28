@@ -12,7 +12,24 @@ import java.time.LocalTime;
         @UniqueConstraint(columnNames = "user_id", name = "meals_unique_user_datetime_idx"),
         @UniqueConstraint(columnNames = "date_time", name = "meals_unique_user_datetime_idx")
 })
+@NamedQueries({
+        @NamedQuery(name = Meal.GET, query = "SELECT m FROM Meal m WHERE m.id=:id AND m.user.id=:userId"),
+        @NamedQuery(name = Meal.GET_ALL, query = "SELECT m FROM Meal m WHERE m.user.id=:userId ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal m WHERE m.id=:id AND m.user.id=:userId"),
+        @NamedQuery(name = Meal.GET_BETWEEN, query = "SELECT m FROM Meal m " +
+                "WHERE m.user.id=:userId AND m.dateTime BETWEEN :startDate AND :endDate " +
+                "ORDER BY m.dateTime DESC"),
+        @NamedQuery(name = Meal.UPDATE, query = "UPDATE Meal m " +
+                "SET m.dateTime=:dateTime, m.description=:description, m.calories=:calories " +
+                "WHERE m.id=:id AND m.user.id=:userId")
+})
 public class Meal extends AbstractBaseEntity {
+    public static final String GET = "Meal.get";
+    public static final String GET_ALL = "Meal.getAll";
+    public static final String GET_BETWEEN = "Meal.getBetween";
+    public static final String DELETE = "Meal.delete";
+    public static final String UPDATE = "Meal.update";
+
     @Column(name = "date_time", nullable = false, unique = true)
     @Convert(converter = LocalDateTimeConvertor.class)
     private LocalDateTime dateTime;
@@ -25,7 +42,7 @@ public class Meal extends AbstractBaseEntity {
 
     @CollectionTable(name = "users", joinColumns = @JoinColumn(name = "id"))
     @JoinColumn(name = "user_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
     public Meal() {
@@ -40,6 +57,10 @@ public class Meal extends AbstractBaseEntity {
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
+    }
+
+    public Meal(Meal meal) {
+        this(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories());
     }
 
     public LocalDateTime getDateTime() {

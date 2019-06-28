@@ -1,7 +1,5 @@
 package ru.javawebinar.topjava.service;
 
-import ch.qos.logback.core.pattern.color.ANSIConstants;
-import javafx.scene.paint.Color;
 import org.junit.AfterClass;
 import org.junit.AssumptionViolatedException;
 import org.junit.Rule;
@@ -87,36 +85,6 @@ public class MealServiceTest {
         log.info("\u001B[35m Meal Service tests [Total time - {} sec {} ms]\u001B[0m", seconds, milliSeconds);
         testsStatistic.forEach((testName, time) -> log.info("\u001B[35mTest '{}' takes {} ms\u001B[0m", testName, time));
     }
-
-//    @Rule
-//    public ExternalResource resource = new ExternalResource() {
-//        private long startTime;
-//        private String testName;
-//
-//        @Override
-//        public Statement apply(Statement base, Description description) {
-//            testName = description.getMethodName(); // getDisplayName is too large
-//            return super.apply(base, description);
-//        }
-//
-//        @Override
-//        protected void before() throws Throwable {
-//            startTime = System.currentTimeMillis();
-//        }
-//
-//        @Override
-//        protected void after() {
-//            long time = System.currentTimeMillis() - startTime;
-//            testsStatistic.put(testName, time);
-//            System.out.format("Test %s: spent %d ms\n", testName, time);
-//        }
-//    };
-//
-//    @AfterClass
-//    public static void afterClass() {
-//        System.out.println("Meal test statistics: ");
-//        testsStatistic.forEach((testName, time) -> System.out.println(testName + " - " + time + " ms"));
-//    }
 
     @Test
     public void delete() throws Exception {

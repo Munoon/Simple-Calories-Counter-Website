@@ -1,7 +1,14 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.rules.ExternalResource;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.junit.runners.model.Statement;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -13,9 +20,7 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static ru.javawebinar.topjava.UserTestData.*;
 
@@ -26,6 +31,40 @@ import static ru.javawebinar.topjava.UserTestData.*;
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class UserServiceTest {
+    private static Map<String, Long> testsStatistics = new HashMap<>();
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
+
+    @Rule
+    public ExternalResource externalResource = new ExternalResource() {
+        private long startTime;
+        private String testName;
+
+        @Override
+        protected void before() throws Throwable {
+            startTime = System.currentTimeMillis();
+        }
+
+        @Override
+        protected void after() {
+            long time = System.currentTimeMillis() - startTime;
+            testsStatistics.put(testName, time);
+            System.out.format("Test %s: spent %d ms\n", testName, time);
+        }
+
+        @Override
+        public Statement apply(Statement base, Description description) {
+            testName = description.getMethodName();
+            return super.apply(base, description);
+        }
+    };
+
+    @AfterClass
+    public static void afterClass() {
+        System.out.println("User test statistics: ");
+        testsStatistics.forEach((testName, time) -> System.out.format("%s - %d ms\n", testName, time));
+    }
 
     @Autowired
     private UserService service;
@@ -38,8 +77,9 @@ public class UserServiceTest {
         assertMatch(service.getAll(), ADMIN, newUser, USER);
     }
 
-    @Test(expected = DataAccessException.class)
+    @Test
     public void duplicateMailCreate() throws Exception {
+        exception.expect(DataAccessException.class);
         service.create(new User(null, "Duplicate", "user@yandex.ru", "newPass", Role.ROLE_USER));
     }
 
@@ -49,8 +89,9 @@ public class UserServiceTest {
         assertMatch(service.getAll(), ADMIN);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void deletedNotFound() throws Exception {
+        exception.expect(NotFoundException.class);
         service.delete(1);
     }
 
@@ -60,8 +101,9 @@ public class UserServiceTest {
         assertMatch(user, USER);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void getNotFound() throws Exception {
+        exception.expect(NotFoundException.class);
         service.get(1);
     }
 

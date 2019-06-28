@@ -65,7 +65,7 @@ public class MealServiceTest {
 
     @AfterClass
     public static void afterClass() {
-        System.out.println("Test statistics: ");
+        System.out.println("Meal test statistics: ");
         testsStatistics.forEach((testName, time) -> System.out.println(testName + " - " + time + " ms"));
     }
 

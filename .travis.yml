@@ -1,6 +1,6 @@
 # https://docs.travis-ci.com/user/languages/java/
 language: java
-jdk: oraclejdk8
+jdk: openjdk11
 
 #https://dzone.com/articles/travis-ci-tutorial-java-projects
 cache:
@@ -16,6 +16,7 @@ before_script:
 branches:
   only:
   - HW4
+  - HW5
 
 # https://docs.travis-ci.com/user/notifications#Configuring-email-notifications
 #notifications:

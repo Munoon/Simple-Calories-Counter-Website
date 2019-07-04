@@ -19,11 +19,11 @@ public class DataJpaMealRepository implements MealRepository {
     private CrudMealRepository crudRepository;
 
     @Autowired
-    private EntityManager em;
+    private CrudUserRepository crudUserRepository;
 
     @Override
     public Meal save(Meal meal, int userId) {
-        User ref = em.getReference(User.class, userId);
+        User ref = crudUserRepository.getOne(userId);
         meal.setUser(ref);
 
         if (meal.isNew()) {

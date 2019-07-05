@@ -36,8 +36,10 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
 public abstract class AbstractMealServiceTest {
     private static final Logger log = getLogger("result");
-
     private static StringBuilder results = new StringBuilder();
+
+    @Autowired
+    private MealService service;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -61,9 +63,6 @@ public abstract class AbstractMealServiceTest {
                 results +
                 "\n---------------------------------");
     }
-
-    @Autowired
-    private MealService service;
 
     @Test
     public void delete() throws Exception {

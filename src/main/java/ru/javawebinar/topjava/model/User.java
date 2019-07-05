@@ -56,7 +56,7 @@ public class User extends AbstractNamedEntity {
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-//    @OrderBy("date desc")
+    @OrderBy("dateTime desc")
     private List<Meal> meals;
 
     public User() {

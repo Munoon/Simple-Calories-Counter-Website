@@ -39,7 +39,7 @@ public abstract class AbstractMealServiceTest {
     private static StringBuilder results = new StringBuilder();
 
     @Autowired
-    private MealService service;
+    protected MealService service;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();

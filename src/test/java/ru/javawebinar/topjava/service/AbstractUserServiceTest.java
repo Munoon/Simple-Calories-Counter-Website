@@ -21,6 +21,8 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -41,7 +43,7 @@ public abstract class AbstractUserServiceTest {
     private static StringBuilder results = new StringBuilder();
 
     @Autowired
-    private UserService service;
+    protected UserService service;
 
     @Autowired
     private CacheManager cacheManager;
@@ -72,7 +74,7 @@ public abstract class AbstractUserServiceTest {
 
     @Test
     public void create() throws Exception {
-        User newUser = new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), Collections.singleton(Role.ROLE_USER));
+        User newUser = new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), Collections.singleton(Role.ROLE_USER), new ArrayList<>());
         User created = service.create(newUser);
         newUser.setId(created.getId());
         assertMatch(service.getAll(), ADMIN, newUser, USER);
@@ -80,7 +82,7 @@ public abstract class AbstractUserServiceTest {
 
     @Test(expected = DataAccessException.class)
     public void duplicateMailCreate() throws Exception {
-        service.create(new User(null, "Duplicate", "user@yandex.ru", "newPass", Role.ROLE_USER));
+        service.create(new User(null, "Duplicate", "user@yandex.ru", "newPass", new ArrayList<>(), Role.ROLE_USER));
     }
 
     @Test

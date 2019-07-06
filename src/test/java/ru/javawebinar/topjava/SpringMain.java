@@ -1,7 +1,5 @@
 package ru.javawebinar.topjava;
 
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -18,7 +16,6 @@ import java.util.List;
 
 public class SpringMain {
     public static void main(String[] args) {
-        // java 7 automatic resource management
         GenericXmlApplicationContext appCtx = new GenericXmlApplicationContext();
         appCtx.getEnvironment().setActiveProfiles("postgres", "datajpa");
         appCtx.load("spring/spring-app.xml", "spring/spring-db.xml");

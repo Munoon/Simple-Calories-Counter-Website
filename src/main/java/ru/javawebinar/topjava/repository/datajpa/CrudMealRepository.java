@@ -32,4 +32,7 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
     // Пробовал сделать по названию, не получилось, да и название выходит длинное
     @Query("SELECT meal FROM Meal meal WHERE meal.user.id=:userId AND meal.dateTime BETWEEN :startDate AND :endDate")
     List<Meal> getBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate, @Param("userId") int userId, Sort sort);
+
+    @Query("SELECT m FROM Meal m LEFT JOIN FETCH m.user WHERE m.id=:id AND m.user.id=:userId")
+    Meal getMealWithUser(@Param("id") int id, @Param("userId") int userId);
 }

@@ -51,4 +51,9 @@ public class DataJpaMealRepository implements MealRepository {
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
         return crudRepository.getBetween(startDate, endDate, userId, SORT_BY_DATE);
     }
+
+    @Override
+    public Meal getMealWithUser(int id, int userId) throws UnsupportedOperationException {
+        return crudRepository.getMealWithUser(id, userId);
+    }
 }

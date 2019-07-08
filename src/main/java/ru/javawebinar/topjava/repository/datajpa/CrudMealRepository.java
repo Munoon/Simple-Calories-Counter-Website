@@ -12,16 +12,12 @@ import ru.javawebinar.topjava.model.Meal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+@Transactional(readOnly = true, propagation = Propagation.REQUIRED) // REQUIRED используеться по умолчанию, я написал для наглядности
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
-    // почему-то у меня deleteByIdAndUserId не сработало, пришлось писать запрос
     @Transactional
-    @Modifying
-    @Query("DELETE FROM Meal m WHERE m.id=:id AND m.user.id=:userId")
-    int delete(@Param("id") int id, @Param("userId") int userId);
+    int deleteByIdAndUser_id(int id, int userId);
 
     @Transactional
-    @Modifying
     @Override
     Meal save(Meal meal);
 

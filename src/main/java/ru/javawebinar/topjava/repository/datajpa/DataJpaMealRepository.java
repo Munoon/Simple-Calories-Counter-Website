@@ -34,7 +34,7 @@ public class DataJpaMealRepository implements MealRepository {
 
     @Override
     public boolean delete(int id, int userId) {
-        return crudRepository.delete(id, userId) != 0;
+        return crudRepository.deleteByIdAndUser_id(id, userId) != 0;
     }
 
     @Override

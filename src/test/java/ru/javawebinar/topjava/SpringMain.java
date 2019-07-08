@@ -17,7 +17,7 @@ import java.util.List;
 public class SpringMain {
     public static void main(String[] args) {
         GenericXmlApplicationContext appCtx = new GenericXmlApplicationContext();
-        appCtx.getEnvironment().setActiveProfiles("postgres", "datajpa");
+        appCtx.getEnvironment().setActiveProfiles(Profiles.getActiveDbProfile(), Profiles.DATAJPA);
         appCtx.load("spring/spring-app.xml", "spring/spring-db.xml");
         appCtx.refresh();
 

@@ -55,7 +55,7 @@ public class DataJpaMealRepository implements MealRepository {
     }
 
     @Override
-    public Meal getMealWithUser(int id, int userId) throws UnsupportedOperationException {
+    public Meal getMealWithUser(int id, int userId) {
         return crudRepository.getMealWithUser(id, userId);
     }
 }

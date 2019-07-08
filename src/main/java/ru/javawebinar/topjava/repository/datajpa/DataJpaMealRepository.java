@@ -27,11 +27,19 @@ public class DataJpaMealRepository implements MealRepository {
         User ref = crudUserRepository.getOne(userId);
         meal.setUser(ref);
 
+        Meal result;
+
+        System.out.println("SAVE BEFORE");
+
         if (meal.isNew()) {
-            return crudRepository.save(meal);
+            result = crudRepository.save(meal);
         } else {
-            return get(meal.getId(), userId) == null ? null : crudRepository.save(meal);
+            result = get(meal.getId(), userId) == null ? null : crudRepository.save(meal);
         }
+
+        System.out.println("SAVE AFTER");
+
+        return result;
     }
 
     @Override
@@ -54,8 +62,7 @@ public class DataJpaMealRepository implements MealRepository {
         return crudRepository.getBetween(startDate, endDate, userId, SORT_BY_DATE);
     }
 
-    @Override
-    public Meal getMealWithUser(int id, int userId) {
-        return crudRepository.getMealWithUser(id, userId);
+    public Meal getWithUser(int id, int userId) {
+        return crudRepository.getWithUser(id, userId);
     }
 }

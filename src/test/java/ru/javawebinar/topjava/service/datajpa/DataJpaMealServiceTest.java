@@ -13,7 +13,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 public class DataJpaMealServiceTest extends AbstractMealServiceTest {
     @Test
     public void getMealWithUser() {
-        Meal meal = service.getMealWithUser(MEAL1_ID, USER_ID);
+        Meal meal = service.getWithUser(MEAL1_ID, USER_ID);
         Meal expected = new Meal(MEAL1);
         expected.setUser(USER);
         assertMatchWithUser(meal, expected);

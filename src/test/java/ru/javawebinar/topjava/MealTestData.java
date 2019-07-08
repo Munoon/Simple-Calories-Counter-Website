@@ -39,7 +39,8 @@ public class MealTestData {
     }
 
     public static void assertMatchWithUser(Meal actual, Meal expected) {
-        assertThat(actual).isEqualToComparingFieldByFieldRecursively(expected);
+        assertThat(actual).isEqualToIgnoringGivenFields(expected, "user");
+        UserTestData.assertMatch(actual.getUser(), expected.getUser());
     }
 
     public static void assertMatch(Iterable<Meal> actual, Meal... expected) {

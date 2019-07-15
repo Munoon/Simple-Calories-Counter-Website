@@ -3,7 +3,10 @@ package ru.javawebinar.topjava.repository.jdbc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -13,12 +16,10 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
-import java.sql.Array;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Repository
 @Transactional(readOnly = true)
@@ -31,21 +32,13 @@ public class JdbcUserRepository implements UserRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private final SimpleJdbcInsert insertUser;
-
-    private final SimpleJdbcInsert insertRoles;
-
-    private final JdbcTemplate rolesJdbcTemplate;
-
     @Autowired
-    public JdbcUserRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate rolesJdbcTemplate) {
+    public JdbcUserRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.insertUser = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("users")
                 .usingGeneratedKeyColumns("id");
-        this.insertRoles = new SimpleJdbcInsert(rolesJdbcTemplate)
-                .withTableName("user_roles");
 
         this.jdbcTemplate = jdbcTemplate;
-        this.rolesJdbcTemplate = rolesJdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
@@ -58,12 +51,26 @@ public class JdbcUserRepository implements UserRepository {
             Number newKey = insertUser.executeAndReturnKey(parameterSource);
             user.setId(newKey.intValue());
 
-            user.getRoles().forEach(role -> {
-                Map<String, Object> map = new HashMap<>();
-                map.put("user_id", user.getId());
-                map.put("role", role);
-                insertRoles.execute(map);
+            jdbcTemplate.batchUpdate("INSERT INTO user_roles (user_id, role) VALUES (?, ?)", new BatchPreparedStatementSetter() {
+                @Override
+                public void setValues(PreparedStatement ps, int i) throws SQLException {
+                    ps.setInt(1, user.getId());
+                    ps.setString(2, user.getRoles().toArray()[i].toString());
+                }
+
+                @Override
+                public int getBatchSize() {
+                    return user.getRoles().size();
+                }
             });
+
+//            пусть это будет моим напоминанием)
+//            user.getRoles().forEach(role -> {
+//                Map<String, Object> map = new HashMap<>();
+//                map.put("user_id", user.getId());
+//                map.put("role", role);
+//                insertRoles.execute(map);
+//            });
         } else if (namedParameterJdbcTemplate.update(
                 "UPDATE users SET name=:name, email=:email, password=:password, " +
                         "registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id", parameterSource) == 0) {

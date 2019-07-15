@@ -51,19 +51,6 @@ public class JdbcUserRepository implements UserRepository {
             Number newKey = insertUser.executeAndReturnKey(parameterSource);
             user.setId(newKey.intValue());
 
-            jdbcTemplate.batchUpdate("INSERT INTO user_roles (user_id, role) VALUES (?, ?)", new BatchPreparedStatementSetter() {
-                @Override
-                public void setValues(PreparedStatement ps, int i) throws SQLException {
-                    ps.setInt(1, user.getId());
-                    ps.setString(2, user.getRoles().toArray()[i].toString());
-                }
-
-                @Override
-                public int getBatchSize() {
-                    return user.getRoles().size();
-                }
-            });
-
 //            пусть это будет моим напоминанием)
 //            user.getRoles().forEach(role -> {
 //                Map<String, Object> map = new HashMap<>();
@@ -71,11 +58,14 @@ public class JdbcUserRepository implements UserRepository {
 //                map.put("role", role);
 //                insertRoles.execute(map);
 //            });
-        } else if (namedParameterJdbcTemplate.update(
-                "UPDATE users SET name=:name, email=:email, password=:password, " +
-                        "registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id", parameterSource) == 0) {
-            return null;
+        } else {
+            int update = namedParameterJdbcTemplate.update("UPDATE users SET name=:name, email=:email, password=:password, " +
+                    "registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id", parameterSource);
+            if (update == 0) return null;
+            else
+                jdbcTemplate.update("DELETE FROM user_roles WHERE user_id=?", user.getId());
         }
+        batchUpdateRoles(user.getRoles(), user.getId());
         return user;
     }
 
@@ -102,6 +92,21 @@ public class JdbcUserRepository implements UserRepository {
     public List<User> getAll() {
 //        return jdbcTemplate.query("SELECT * FROM users u INNER JOIN user_roles r ON r.user_id = u.id ORDER BY name, email", ROW_MAPPER);
         return jdbcTemplate.query("SELECT * FROM users u INNER JOIN user_roles r ON r.user_id = u.id ORDER BY name, email", new UserExtractor());
+    }
+
+    private void batchUpdateRoles(Set<Role> roles, int id) {
+        jdbcTemplate.batchUpdate("INSERT INTO user_roles (user_id, role) VALUES (?, ?)", new BatchPreparedStatementSetter() {
+            @Override
+            public void setValues(PreparedStatement ps, int i) throws SQLException {
+                ps.setInt(1, id);
+                ps.setString(2, roles.toArray()[i].toString());
+            }
+
+            @Override
+            public int getBatchSize() {
+                return roles.size();
+            }
+        });
     }
 
     class UserExtractor implements ResultSetExtractor<List<User>> {

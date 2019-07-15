@@ -77,21 +77,21 @@ public class JdbcUserRepository implements UserRepository {
 
     @Override
     public User get(int id) {
-        List<User> users = jdbcTemplate.query("SELECT * FROM users u INNER JOIN user_roles r ON r.user_id = u.id WHERE id=?", new UserExtractor(), id);
+        List<User> users = jdbcTemplate.query("SELECT * FROM users u LEFT OUTER JOIN user_roles r ON r.user_id = u.id WHERE id=?", new UserExtractor(), id);
         return DataAccessUtils.singleResult(users);
     }
 
     @Override
     public User getByEmail(String email) {
 //        return jdbcTemplate.queryForObject("SELECT * FROM users WHERE email=?", ROW_MAPPER, email);
-        List<User> users = jdbcTemplate.query("SELECT * FROM users u INNER JOIN user_roles r ON r.user_id = u.id WHERE email=?", new UserExtractor(), email);
+        List<User> users = jdbcTemplate.query("SELECT * FROM users u LEFT OUTER JOIN user_roles r ON r.user_id = u.id WHERE email=?", new UserExtractor(), email);
         return DataAccessUtils.singleResult(users);
     }
 
     @Override
     public List<User> getAll() {
 //        return jdbcTemplate.query("SELECT * FROM users u INNER JOIN user_roles r ON r.user_id = u.id ORDER BY name, email", ROW_MAPPER);
-        return jdbcTemplate.query("SELECT * FROM users u INNER JOIN user_roles r ON r.user_id = u.id ORDER BY name, email", new UserExtractor());
+        return jdbcTemplate.query("SELECT * FROM users u LEFT OUTER JOIN user_roles r ON r.user_id = u.id ORDER BY name, email", new UserExtractor());
     }
 
     private void batchUpdateRoles(Set<Role> roles, int id) {
@@ -130,7 +130,10 @@ public class JdbcUserRepository implements UserRepository {
                 ));
 
                 roles.computeIfAbsent(id, k -> new HashSet<>()); // если список ролей по id нашего юзера ещё не проинициализирована - инициализируем
-                roles.get(id).add(Role.valueOf(rs.getString("role"))); // добавляем в список ролей полученую роль
+
+                String role = rs.getString("role");
+                if (role != null) // если у пользователя нет ролей - ничего не делаем
+                    roles.get(id).add(Role.valueOf(role)); // добавляем в список ролей полученую роль
             }
 
             roles.forEach((id, rolesSet) -> users.get(id).setRoles(rolesSet)); // каждому юзеру добавляем роль из мапы roles

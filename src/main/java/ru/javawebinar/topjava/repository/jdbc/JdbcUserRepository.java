@@ -24,9 +24,6 @@ import java.util.*;
 @Repository
 @Transactional(readOnly = true)
 public class JdbcUserRepository implements UserRepository {
-
-    private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
-
     private final JdbcTemplate jdbcTemplate;
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -127,10 +124,10 @@ public class JdbcUserRepository implements UserRepository {
                             rs.getInt("calories_per_day"),
                             rs.getBoolean("enabled"),
                             rs.getDate("registered"),
-                            null
+                            EnumSet.noneOf(Role.class)
                     ));
 
-                roles.computeIfAbsent(id, k -> new HashSet<>()); // если список ролей по id нашего юзера ещё не проинициализирована - инициализируем
+                roles.computeIfAbsent(id, k -> EnumSet.noneOf(Role.class)); // если список ролей по id нашего юзера ещё не проинициализирована - инициализируем
 
                 String role = rs.getString("role");
                 if (role != null) // если у пользователя нет ролей - ничего не делаем

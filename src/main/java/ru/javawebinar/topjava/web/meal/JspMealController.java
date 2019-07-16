@@ -39,7 +39,7 @@ public class JspMealController {
     @GetMapping("/delete")
     public String delete(HttpServletRequest request) {
         controller.delete(getId(request));
-        return "redirect:../meals";
+        return "redirect:/meals";
     }
 
     @GetMapping("/create")
@@ -83,7 +83,7 @@ public class JspMealController {
         else
             controller.update(meal, getId(request));
 
-        return "redirect:../meals";
+        return "redirect:/meals";
     }
 
     private int getId(HttpServletRequest request) {

@@ -18,7 +18,7 @@
             </c:otherwise>
         </c:choose>
     </h2>
-    <form method="post" action="${meal.id == null ? 'create' : 'update'}">
+    <form method="post" action="post">
         <input type="hidden" name="id" value="${meal.id}">
         <dl>
             <dt><spring:message code="meal.dateTime"/></dt>

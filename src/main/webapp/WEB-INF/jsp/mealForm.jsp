@@ -10,7 +10,7 @@
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
     <h2>
         <c:choose>
-            <c:when test="${meal.id == null}">
+            <c:when test="${meal.isNew()}">
                 <spring:message code="meal.create"/>
             </c:when>
             <c:otherwise>

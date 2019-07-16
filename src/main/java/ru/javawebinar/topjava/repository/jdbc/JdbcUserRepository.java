@@ -118,16 +118,17 @@ public class JdbcUserRepository implements UserRepository {
 
             while (rs.next()) {
                 int id = rs.getInt("id");
-                users.put(id, new User( // тут всё просто, кладу в мапу юзеров нового юзера, в качестве ключа его ID
-                        id,
-                        rs.getString("name"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getInt("calories_per_day"),
-                        rs.getBoolean("enabled"),
-                        rs.getDate("registered"),
-                        null
-                ));
+                if (!users.containsKey(id)) // если такой юзер уже есть - ничего не делаем
+                    users.put(id, new User( // тут всё просто, кладу в мапу юзеров нового юзера, в качестве ключа его ID
+                            id,
+                            rs.getString("name"),
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            rs.getInt("calories_per_day"),
+                            rs.getBoolean("enabled"),
+                            rs.getDate("registered"),
+                            null
+                    ));
 
                 roles.computeIfAbsent(id, k -> new HashSet<>()); // если список ролей по id нашего юзера ещё не проинициализирована - инициализируем
 

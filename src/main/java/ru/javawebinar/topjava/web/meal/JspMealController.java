@@ -32,6 +32,7 @@ public class JspMealController {
     @GetMapping
     public String getAll(HttpServletRequest request) {
         request.setAttribute("meals", controller.getAll());
+        request.setAttribute("filter", false);
         return "meals";
     }
 
@@ -64,6 +65,7 @@ public class JspMealController {
         LocalTime startTime = parseLocalTime(request.getParameter("startTime"));
         LocalTime endTime = parseLocalTime(request.getParameter("endTime"));
         request.setAttribute("meals", controller.getBetween(startDate, startTime, endDate, endTime));
+        request.setAttribute("filter", true);
         return "meals";
     }
 

@@ -26,7 +26,6 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired(required = false)
     protected JpaUtil jpaUtil;
 
-
     @Before
     public void setUp() throws Exception {
         cacheManager.getCache("users").clear();
@@ -73,8 +72,8 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void getByEmail() throws Exception {
-        User user = service.getByEmail("user@yandex.ru");
-        assertMatch(user, USER);
+        User user = service.getByEmail(ADMIN.getEmail());
+        assertMatch(user, ADMIN);
     }
 
     @Test

@@ -3,11 +3,13 @@ package ru.javawebinar.topjava.repository.jpa;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.HashSet;
 import java.util.List;
 
 @Repository
@@ -62,11 +64,21 @@ public class JpaUserRepository implements UserRepository {
         List<User> users = em.createNamedQuery(User.BY_EMAIL, User.class)
                 .setParameter(1, email)
                 .getResultList();
+        if (users.size() > 1)
+            return getWithManyRoles(users);
         return DataAccessUtils.singleResult(users);
     }
 
     @Override
     public List<User> getAll() {
         return em.createNamedQuery(User.ALL_SORTED, User.class).getResultList();
+    }
+
+    private User getWithManyRoles(List<User> users) {
+        User finalUser = users.get(0);
+        HashSet<Role> roles = new HashSet<>();
+        users.forEach(user -> roles.addAll(user.getRoles()));
+        finalUser.setRoles(roles);
+        return finalUser;
     }
 }

@@ -7,6 +7,7 @@
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
+    <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
     <h2>
         <c:choose>
             <c:when test="${meal.id == null}">
@@ -17,7 +18,6 @@
             </c:otherwise>
         </c:choose>
     </h2>
-    <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
     <form method="post" action="${meal.id == null ? 'create' : 'update'}">
         <input type="hidden" name="id" value="${meal.id}">
         <dl>

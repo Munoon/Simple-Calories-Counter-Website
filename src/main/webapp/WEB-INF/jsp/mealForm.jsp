@@ -8,16 +8,7 @@
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
-    <h2>
-        <c:choose>
-            <c:when test="${meal.isNew()}">
-                <spring:message code="meal.create"/>
-            </c:when>
-            <c:otherwise>
-                <spring:message code="meal.edit"/>
-            </c:otherwise>
-        </c:choose>
-    </h2>
+    <h1><spring:message code="${meal.id == null ? 'meal.create' : 'meal.edit'}"/></h1>
     <form method="post" action="post">
         <input type="hidden" name="id" value="${meal.id}">
         <dl>

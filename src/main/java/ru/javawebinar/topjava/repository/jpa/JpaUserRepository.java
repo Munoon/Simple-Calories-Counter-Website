@@ -47,8 +47,8 @@ public class JpaUserRepository implements UserRepository {
     @Override
     @Transactional
     public boolean delete(int id) {
-
-/*      User ref = em.getReference(User.class, id);
+/*
+        User ref = em.getReference(User.class, id);
         em.remove(ref);
 
         Query query = em.createQuery("DELETE FROM User u WHERE u.id=:id");
@@ -64,21 +64,11 @@ public class JpaUserRepository implements UserRepository {
         List<User> users = em.createNamedQuery(User.BY_EMAIL, User.class)
                 .setParameter(1, email)
                 .getResultList();
-        if (users.size() > 1)
-            return getWithManyRoles(users);
         return DataAccessUtils.singleResult(users);
     }
 
     @Override
     public List<User> getAll() {
         return em.createNamedQuery(User.ALL_SORTED, User.class).getResultList();
-    }
-
-    private User getWithManyRoles(List<User> users) {
-        User finalUser = users.get(0);
-        HashSet<Role> roles = new HashSet<>();
-        users.forEach(user -> roles.addAll(user.getRoles()));
-        finalUser.setRoles(roles);
-        return finalUser;
     }
 }

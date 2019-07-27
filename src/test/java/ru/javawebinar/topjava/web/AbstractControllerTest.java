@@ -35,13 +35,13 @@ abstract public class AbstractControllerTest {
         CHARACTER_ENCODING_FILTER.setForceEncoding(true);
     }
 
+    @Autowired(required = false)
+    private JpaUtil jpaUtil;
+
     protected MockMvc mockMvc;
 
     @Autowired
     private CacheManager cacheManager;
-
-    @Autowired(required = false)
-    private JpaUtil jpaUtil;
 
     @Autowired
     protected UserService userService;

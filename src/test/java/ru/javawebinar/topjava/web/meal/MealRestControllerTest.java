@@ -84,12 +84,11 @@ class MealRestControllerTest extends AbstractControllerTest {
     void getBetween() throws Exception {
         List<MealTo> expected = MealsUtil.getWithExcess(Arrays.asList(MEAL6, MEAL5, MEAL4), MealsUtil.DEFAULT_CALORIES_PER_DAY);
 
-        LocalDateTime startDateTime = LocalDateTime.of(2015, 5, 31, 10, 0);
-        LocalDateTime endDateTime = LocalDateTime.of(2015, 5, 31, 20, 0);
-        String start = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(startDateTime);
-        String end = DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(endDateTime);
+        LocalDateTime start = LocalDateTime.of(2015, 5, 31, 10, 0);
+        LocalDateTime end = LocalDateTime.of(2015, 5, 31, 20, 0);
 
-        mockMvc.perform(get(REST_URL + String.format("filter?start=%s&end=%s", start, end)))
+        mockMvc.perform(get(REST_URL + String.format("filter?startDate=%s&endDate=%s&startTime=%s&endTime=%s",
+                start.toLocalDate(), end.toLocalDate(), start.toLocalTime(), end.toLocalTime())))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJson(expected));

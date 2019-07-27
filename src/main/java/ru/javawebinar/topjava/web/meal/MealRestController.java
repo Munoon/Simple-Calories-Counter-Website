@@ -4,13 +4,20 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.web.LocalDateFormat;
+import ru.javawebinar.topjava.web.LocalDateFormatter;
+import ru.javawebinar.topjava.web.LocalTimeFormat;
+import ru.javawebinar.topjava.web.LocalTimeFormatter;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
@@ -61,9 +68,11 @@ public class MealRestController extends AbstractMealController {
 
     @GetMapping("/filter")
     public List<MealTo> getBetween(
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @RequestParam LocalDateTime start,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @RequestParam LocalDateTime end
+            @LocalDateFormat(style = LocalDateFormatter.Style.MIN) @RequestParam(defaultValue = "") LocalDate startDate,
+            @LocalDateFormat(style = LocalDateFormatter.Style.MAX) @RequestParam(defaultValue = "") LocalDate endDate,
+            @LocalTimeFormat(style = LocalTimeFormatter.Style.MIN) @RequestParam(defaultValue = "") LocalTime startTime,
+            @LocalTimeFormat(style = LocalTimeFormatter.Style.MAX) @RequestParam(defaultValue = "") LocalTime endTime
     ) {
-        return super.getBetween(start.toLocalDate(), start.toLocalTime(), end.toLocalDate(), end.toLocalTime());
+        return super.getBetween(startDate, startTime, endDate, endTime);
     }
 }

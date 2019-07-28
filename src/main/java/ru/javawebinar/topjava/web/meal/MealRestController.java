@@ -1,27 +1,18 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
-import ru.javawebinar.topjava.web.LocalDateFormat;
-import ru.javawebinar.topjava.web.LocalDateFormatter;
-import ru.javawebinar.topjava.web.LocalTimeFormat;
-import ru.javawebinar.topjava.web.LocalTimeFormatter;
 
 import java.net.URI;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
-import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 import static ru.javawebinar.topjava.web.meal.MealRestController.REST_URL;
 
 @RestController
@@ -50,9 +41,7 @@ public class MealRestController extends AbstractMealController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Meal> createWithLocation(@RequestBody Meal meal) {
-        log.info("Create {}", meal);
-        checkNew(meal);
-        Meal created = service.create(meal, authUserId());
+        Meal created = super.create(meal);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
@@ -68,10 +57,10 @@ public class MealRestController extends AbstractMealController {
 
     @GetMapping("/filter")
     public List<MealTo> getBetween(
-            @LocalDateFormat(style = LocalDateFormatter.Style.MIN) @RequestParam(defaultValue = "") LocalDate startDate,
-            @LocalDateFormat(style = LocalDateFormatter.Style.MAX) @RequestParam(defaultValue = "") LocalDate endDate,
-            @LocalTimeFormat(style = LocalTimeFormatter.Style.MIN) @RequestParam(defaultValue = "") LocalTime startTime,
-            @LocalTimeFormat(style = LocalTimeFormatter.Style.MAX) @RequestParam(defaultValue = "") LocalTime endTime
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate,
+            @RequestParam LocalTime startTime,
+            @RequestParam LocalTime endTime
     ) {
         return super.getBetween(startDate, startTime, endDate, endTime);
     }

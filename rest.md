@@ -1,27 +1,23 @@
-# Crud Rest Meals requests examples
-Description | Method | URL | Body
------------ | ------ | --- | ----
-Get | GET | /rest/meals/100002 | -
-Delete | DELETE | /rest/meals/100002 | -
-Create | POST | /rest/meals/ | *Create Body*
-Update | PUT | /rest/meals/100009 | *Update Body*
+**Replace `{URL}` WITH YOU MAIN PAGE URL**
 
-## Create Body
-```json
-{
-    "id": null,
-    "dateTime": "2019-07-25T13:00:00",
-    "description": "New Meal",
-    "calories": 500 
-}
-```
+*For example `{URL}` -> `http://localhost:8080/topjava`*
 
-## Update Body
-```json
-{
-    "id": 100009,
-    "dateTime": "2015-05-31T20:00:00",
-    "description": "Updated Description",
-    "calories": 700
-}
-```
+# Curl Rest Meals requests examples
+Description | Command
+----------- | -------
+Get by Id | `$ curl {URL}/rest/meals/10000`
+Delete | `$ curl -X "DELETE" {URL}/rest/meals/100003`
+Create | `$ curl -d "@rest\create.json" -H "Content-Type: application/json" -X POST {URL}/rest/meals`
+Update | `$ curl -d "@rest\update.json" -H "Content-Type: application/json" -X PUT {URL}/rest/meals/100007`
+Get All | `$ curl {URL}/rest/meals`
+Get Between | `$ curl {URL}/rest/meals/filter?startDate=2015-05-31`
+
+# URL Rest Meals requests examples
+Description | Method | URL | Body File
+----------- | ------ | --- | ---------
+Get | GET | {URL}/rest/meals/100002 | -
+Delete | DELETE | {URL}/rest/meals/100002 | -
+Create | POST | {URL}/rest/meals/ | rest/create.json
+Update | PUT | {URL}/rest/meals/100007 | rest/update.json
+Get All | GET | {URL}/rest/meals | -
+Get Between | GET | {URL}/rest/meals/filter?startDate=2015-05-31 | -

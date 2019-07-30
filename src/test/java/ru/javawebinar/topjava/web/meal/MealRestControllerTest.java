@@ -92,4 +92,14 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(contentJson(expected));
     }
+
+    @Test
+    void getBetweenNull() throws Exception {
+        List<MealTo> expected = MealsUtil.getWithExcess(Arrays.asList(MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1), MealsUtil.DEFAULT_CALORIES_PER_DAY);
+
+        mockMvc.perform(get(REST_URL + "filter?startDate="))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(contentJson(expected));
+    }
 }

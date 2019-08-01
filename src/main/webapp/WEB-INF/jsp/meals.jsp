@@ -12,7 +12,7 @@
         <h3 class="text-center"><spring:message code="meal.title"/></h3>
 
         <%-- Форму скопировал из демо приложения, сам бы я такое не сделал ) --%>
-        <form method="get" action="meals/filter">
+        <form method="get" action="meals/filter" id="filter">
             <div class="card border-dark">
                 <div class="row">
                     <div class="offset-1 col-2">
@@ -25,11 +25,11 @@
                     </div>
                     <div class="offset-2 col-2">
                         <label><spring:message code="meal.startTime"/></label>
-                        <input type="date" name="startTime" value="${param.startTime}" class="form-control">
+                        <input type="time" name="startTime" value="${param.startTime}" class="form-control">
                     </div>
                     <div class="col-2">
                         <label><spring:message code="meal.endTime"/></label>
-                        <input type="date" name="endTime" value="${param.endTime}" class="form-control">
+                        <input type="time" name="endTime" value="${param.endTime}" class="form-control">
                     </div>
                 </div>
 
@@ -65,7 +65,7 @@
                         <td>${meal.description}</td>
                         <td>${meal.calories}</td>
                         <td><a href="meals/update?id=${meal.id}"><span class="fa fa-pencil"></span></a></td>
-                        <td><a><span class="fa fa-remove"></span></a></td>
+                        <td><a onclick="meals.delete(${meal.id})"><span class="fa fa-remove"></span></a></td>
                     </tr>
                 </c:forEach>
             </tbody>
@@ -124,7 +124,8 @@
     let meals = new Meals({
         ajaxUrl: 'ajax/meals/',
         createModal: document.getElementById('createRow'),
-        table: document.getElementById('datatable')
+        table: document.getElementById('datatable'),
+        filter: document.getElementById('filter')
     });
 </script>
 

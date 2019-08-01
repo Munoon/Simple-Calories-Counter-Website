@@ -1,12 +1,11 @@
 'use strict';
 
 class Meals {
-    constructor({ ajaxUrl, createModal, table }) {
+    constructor({ ajaxUrl, createModal, table, filter }) {
         this.ajaxUrl = ajaxUrl;
         this.createModal = createModal;
         this.table = table;
-
-        this._addEventListeners();
+        this.filter = filter;
     }
 
     create() {
@@ -30,7 +29,11 @@ class Meals {
     }
 
     updateTable() {
-        fetch(this.ajaxUrl)
+        let url = this.ajaxUrl;
+        if (this._checkFilter())
+            url += 'filter' + this._getFilterData();
+
+        fetch(url)
             .then(response => response.json())
             .then(response => this._drawTable(response));
     }
@@ -43,29 +46,33 @@ class Meals {
         $(this.createModal).modal('hide');
     }
 
+    _checkFilter() {
+        let result = false;
+        this.filter.querySelectorAll('input').forEach(element => {
+            if (element.value !== '')
+                result = true;
+        });
+        return result;
+    }
+
+    _getFilterData() {
+        let result = '?';
+        this.filter.querySelectorAll('input').forEach(element => {
+            result += `${element.name}=${element.value}&`;
+        });
+        return result.substring(0, result.length - 1);
+    }
+
     _drawTable(data) {
         this.table.innerHTML = data.map(meal => `
-            <tr data-mealExcess="${meal.excess}" data-id="${meal.id}">
+            <tr data-mealExcess="${meal.excess}">
                 <td>${meal.dateTime.replace('T', ' ')}</td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
                 <td><a href="meals/update?id=${meal.id}"><span class="fa fa-pencil"></span></a></td>
-                <td><a><span class="fa fa-remove"></span></a></td>
+                <td><a onclick="meals.delete(${meal.id})"><span class="fa fa-remove"></span></a></td>
             </tr>
         `).join('');
-        this._addEventListeners();
-    }
-
-    _addEventListeners() {
-        this.table.addEventListener('click', e => {
-            if (!e.target.classList.contains('fa-remove')) return;
-            e.preventDefault();
-            let tr = e.target.closest('tr');
-            let id = tr.dataset.id;
-
-            if (confirm('Are you sure?'))
-                this.delete(id);
-        })
     }
 
     _clearInputs() {

@@ -6,6 +6,9 @@ class Meals {
         this.createModal = createModal;
         this.table = table;
         this.filter = filter;
+
+        this.createModal.querySelectorAll('input')
+            .forEach(element => element.addEventListener('input', () => this._updateSaveButton(!this._validateInput())));
     }
 
     create() {
@@ -50,6 +53,24 @@ class Meals {
 
     closeModal() {
         $(this.createModal).modal('hide');
+    }
+
+    _updateSaveButton(state) {
+        this.createModal.querySelector('#saveButton').disabled = state;
+    }
+
+    _validateInput() {
+        let datePattern = /\d{2}-\d{2}-\d{2}T\d{2}:\d{2}/g;
+        let date = this.createModal.querySelector('#dateTime').value;
+        let descriptionLength = this.createModal.querySelector('#description').value.length;
+        let calories = +this.createModal.querySelector('#calories').value;
+
+        if (!datePattern.test(date)) return false;
+        if (calories < 10) return false;
+        if (calories > 5000) return false;
+        if (descriptionLength < 2) return false;
+        if (descriptionLength > 120) return false;
+        return true;
     }
 
     _checkFilter() {

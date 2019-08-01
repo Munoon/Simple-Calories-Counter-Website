@@ -109,7 +109,7 @@
                     <span class="fa fa-close"></span>
                     <spring:message code="common.cancel"/>
                 </button>
-                <button type="button" class="btn btn-primary" onclick="meals.create()">
+                <button type="button" id="saveButton" class="btn btn-primary " onclick="meals.create()" disabled>
                     <span class="fa fa-check"></span>
                     <spring:message code="common.save"/>
                 </button>

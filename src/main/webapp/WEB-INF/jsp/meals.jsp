@@ -34,6 +34,10 @@
                 </div>
 
                 <div class="card-footer text-right">
+                    <button class="btn btn-danger" onclick="meals.clearFilter()">
+                        <span class="fa fa-remove"></span>
+                        <spring:message code="common.cancel"/>
+                    </button>
                     <button type="submit" class="btn btn-primary">
                         <span class="fa fa-filter"></span>
                         <spring:message code="meal.filter"/>

@@ -38,6 +38,12 @@ class Meals {
             .then(response => this._drawTable(response));
     }
 
+    clearFilter() {
+        this.filter.querySelectorAll('input').forEach(element => {
+            element.value = '';
+        });
+    }
+
     showModal() {
         $(this.createModal).modal();
     }

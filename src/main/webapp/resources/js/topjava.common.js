@@ -3,9 +3,9 @@ let context, form;
 function makeEditable(ctx) {
     context = ctx;
     form = $('#detailsForm');
-    $(".delete").click(function () {
+    $(".delete").click(function (e) {
         if (confirm('Are you sure?')) {
-            deleteRow($(this).attr("id"));
+            deleteRow(e.target.closest('a').dataset.id);
         }
     });
 

@@ -5,6 +5,8 @@ class Meals {
         this.ajaxUrl = ajaxUrl;
         this.createModal = createModal;
         this.table = table;
+
+        this._addEventListeners();
     }
 
     create() {
@@ -15,6 +17,7 @@ class Meals {
                 this.updateTable();
                 this._successNoty('Saved');
                 this.closeModal();
+                this._clearInputs();
             })
             .catch(error => this._errorNoty(error.message));
     }
@@ -42,14 +45,33 @@ class Meals {
 
     _drawTable(data) {
         this.table.innerHTML = data.map(meal => `
-            <tr data-mealExcess="${meal.excess}">
+            <tr data-mealExcess="${meal.excess}" data-id="${meal.id}">
                 <td>${meal.dateTime.replace('T', ' ')}</td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
                 <td><a href="meals/update?id=${meal.id}"><span class="fa fa-pencil"></span></a></td>
-                <td><a onclick="meals.delete(${meal.id})"><span class="fa fa-remove"></span></a></td>
+                <td><a><span class="fa fa-remove"></span></a></td>
             </tr>
         `).join('');
+        this._addEventListeners();
+    }
+
+    _addEventListeners() {
+        this.table.addEventListener('click', e => {
+            if (!e.target.classList.contains('fa-remove')) return;
+            e.preventDefault();
+            let tr = e.target.closest('tr');
+            let id = tr.dataset.id;
+
+            if (confirm('Are you sure?'))
+                this.delete(id);
+        })
+    }
+
+    _clearInputs() {
+        this.createModal.querySelector('#dateTime').value = "";
+        this.createModal.querySelector('#description').value = "";
+        this.createModal.querySelector('#calories').value = "";
     }
 
     _successNoty(msg) {

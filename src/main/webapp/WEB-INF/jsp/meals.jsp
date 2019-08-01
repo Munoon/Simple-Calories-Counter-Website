@@ -60,12 +60,12 @@
             <tbody id="datatable">
                 <c:forEach items="${meals}" var="meal">
                     <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.to.MealTo"/>
-                    <tr data-mealExcess="${meal.excess}">
+                    <tr data-mealExcess="${meal.excess}" data-id="${meal.id}">
                         <td>${fn:formatDateTime(meal.dateTime)}</td>
                         <td>${meal.description}</td>
                         <td>${meal.calories}</td>
                         <td><a href="meals/update?id=${meal.id}"><span class="fa fa-pencil"></span></a></td>
-                        <td><a onclick="meals.delete(${meal.id})"><span class="fa fa-remove"></span></a></td>
+                        <td><a><span class="fa fa-remove"></span></a></td>
                     </tr>
                 </c:forEach>
             </tbody>

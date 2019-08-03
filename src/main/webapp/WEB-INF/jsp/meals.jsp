@@ -5,6 +5,8 @@
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
 <body>
+<script src="resources/js/topjava.common.js" defer></script>
+<script src="resources/js/topjava.meals.js" defer></script>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
 <div class="jumbotron pt-4">
@@ -46,12 +48,12 @@
             </div>
         </form>
 
-        <button class="btn btn-primary" onclick="meals.showModal()">
+        <button class="btn btn-primary" onclick="add()">
             <span class="fa fa-plus"></span>
             <spring:message code="meal.add"/>
         </button>
 
-        <table class="table table-striped">
+        <table class="table table-striped" id="datatable">
             <thead>
                 <tr>
                     <th><spring:message code="meal.dateTime"/></th>
@@ -61,7 +63,7 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody id="datatable">
+            <tbody>
                 <c:forEach items="${meals}" var="meal">
                     <jsp:useBean id="meal" scope="page" type="ru.javawebinar.topjava.to.MealTo"/>
                     <tr data-mealExcess="${meal.excess}" data-id="${meal.id}">
@@ -69,7 +71,7 @@
                         <td>${meal.description}</td>
                         <td>${meal.calories}</td>
                         <td><a href="meals/update?id=${meal.id}"><span class="fa fa-pencil"></span></a></td>
-                        <td><a onclick="meals.delete(${meal.id})"><span class="fa fa-remove"></span></a></td>
+                        <td><a onclick="deleteRow(${meal.id})"><span class="fa fa-remove"></span></a></td>
                     </tr>
                 </c:forEach>
             </tbody>
@@ -77,7 +79,7 @@
     </div>
 </div>
 
-<div class="modal fade" tabindex="-1" id="createRow">
+<div class="modal fade" tabindex="-1" id="editRow">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -109,7 +111,7 @@
                     <span class="fa fa-close"></span>
                     <spring:message code="common.cancel"/>
                 </button>
-                <button type="button" id="saveButton" class="btn btn-primary " onclick="meals.create()" disabled>
+                <button type="button" id="saveButton" class="btn btn-primary " onclick="meals.save()" disabled>
                     <span class="fa fa-check"></span>
                     <spring:message code="common.save"/>
                 </button>
@@ -117,21 +119,6 @@
         </div>
     </div>
 </div>
-
-<%--
-    Решил использовать класс, так удобнее как по мне.
-    Однако это влечёт проблему: переменная meals инициализируется до инициализации класса
-    Поэтому делаю так
---%>
-<script src="resources/js/topjava.meals.js"></script>
-<script>
-    let meals = new Meals({
-        ajaxUrl: 'ajax/meals/',
-        createModal: document.getElementById('createRow'),
-        table: document.getElementById('datatable'),
-        filter: document.getElementById('filter')
-    });
-</script>
 
 <jsp:include page="fragments/footer.jsp"/>
 </body>

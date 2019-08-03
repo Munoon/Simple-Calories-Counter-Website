@@ -5,11 +5,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.UserService;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 @Controller
 public class RootController {
@@ -40,7 +49,20 @@ public class RootController {
     @GetMapping("/meals")
     public String getMeals(Model model) {
         model.addAttribute("meals",
-                MealsUtil.getWithExcess(mealService.getAll(SecurityUtil.authUserId()), SecurityUtil.authUserCaloriesPerDay()));
+                MealsUtil.getWithExcess(mealService.getAll(authUserId()), SecurityUtil.authUserCaloriesPerDay()));
+        return "meals";
+    }
+
+    @GetMapping(value = "/meals/filter")
+    public String getBetween(Model model,
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false) LocalTime startTime,
+            @RequestParam(required = false) LocalDate endDate,
+            @RequestParam(required = false) LocalTime endTime) {
+
+        List<Meal> mealsDateFiltered = mealService.getBetweenDates(startDate, endDate, authUserId());
+        model.addAttribute("meals",
+                MealsUtil.getFilteredWithExcess(mealsDateFiltered, SecurityUtil.authUserCaloriesPerDay(), startTime, endTime));
         return "meals";
     }
 }

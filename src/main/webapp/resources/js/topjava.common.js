@@ -1,3 +1,5 @@
+'use strict';
+
 let context, form;
 
 function makeEditable(ctx) {
@@ -48,20 +50,20 @@ function deleteRow(id) {
     });
 }
 
-function updateTable() {
-    $.get(context.ajaxUrl, function (data) {
-        context.datatableApi.clear().rows.add(data).draw();
+function updateTable(url = context.ajaxUrl) {
+    $.get(url, (response) => {
+        context.datatableApi.clear().rows.add(response).draw();
     });
 }
 
-function save() {
+function save(url = context.ajaxUrl) {
     $.ajax({
         type: "POST",
         url: context.ajaxUrl,
         data: form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
-        updateTable();
+        updateTable(url);
         successNoty("Saved");
     });
 }

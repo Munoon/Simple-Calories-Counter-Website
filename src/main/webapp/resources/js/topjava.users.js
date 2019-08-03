@@ -39,4 +39,24 @@ $(function () {
             })
         }
     );
+
+    document.querySelectorAll('.user-enabled').forEach(element => {
+        element.addEventListener('click', e => {
+            let target = e.target;
+            let id = target.id;
+            let checkbox = target.checked;
+            let tr = target.closest('tr');
+
+            $.ajax({
+                url: `${context.ajaxUrl}${id}?enabled=${checkbox}`,
+                type: 'POST',
+                error: error => {
+                    target.checked = !checkbox;
+                }
+            }).done(() => {
+                tr.style.color = checkbox ? 'blue' : 'red';
+                successNoty('Updated user active status');
+            });
+        });
+    });
 });

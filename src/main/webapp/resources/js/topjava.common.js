@@ -17,22 +17,6 @@ function makeEditable(ctx) {
 
     // solve problem with cache in IE: https://stackoverflow.com/a/4303862/548473
     $.ajaxSetup({cache: false});
-
-    document.querySelectorAll('.user-enabled').forEach(element => {
-        element.addEventListener('click', e => {
-            let target = e.target;
-            let id = target.id;
-            let checkbox = target.checked;
-
-            $.ajax({
-                url: `${context.ajaxUrl}${id}?enabled=${checkbox}`,
-                type: 'POST'
-            }).done(() => {
-                updateTable();
-                successNoty('Updated user active status');
-            })
-        });
-    });
 }
 
 function add() {

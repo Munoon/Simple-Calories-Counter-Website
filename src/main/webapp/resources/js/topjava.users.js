@@ -55,7 +55,7 @@ $(function () {
                 }
             }).done(() => {
                 tr.style.color = checkbox ? 'blue' : 'red';
-                successNoty('Updated user active status');
+                successNoty(`Setted user profile activity ${checkbox ? 'enabled' : 'disabled'}`);
             });
         });
     });

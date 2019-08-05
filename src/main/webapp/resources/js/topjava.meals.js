@@ -43,7 +43,7 @@ class Meals {
                     "order": [
                         [
                             0,
-                            "asc"
+                            "desc"
                         ]
                     ]
                 })

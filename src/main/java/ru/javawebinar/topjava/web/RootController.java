@@ -52,17 +52,4 @@ public class RootController {
                 MealsUtil.getWithExcess(mealService.getAll(authUserId()), SecurityUtil.authUserCaloriesPerDay()));
         return "meals";
     }
-
-    @GetMapping(value = "/meals/filter")
-    public String getBetween(Model model,
-            @RequestParam(required = false) LocalDate startDate,
-            @RequestParam(required = false) LocalTime startTime,
-            @RequestParam(required = false) LocalDate endDate,
-            @RequestParam(required = false) LocalTime endTime) {
-
-        List<Meal> mealsDateFiltered = mealService.getBetweenDates(startDate, endDate, authUserId());
-        model.addAttribute("meals",
-                MealsUtil.getFilteredWithExcess(mealsDateFiltered, SecurityUtil.authUserCaloriesPerDay(), startTime, endTime));
-        return "meals";
-    }
 }

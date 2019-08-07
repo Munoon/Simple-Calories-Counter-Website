@@ -52,19 +52,19 @@ class Meals {
     }
 
     save() {
-        save(this._getUrl());
+        save(this._getFilterUrl());
     }
 
     updateTable() {
-        updateTable(this._getUrl());
+        updateTable(this._getFilterUrl());
     }
 
     clearFilter() {
         this.filter.reset();
     }
 
-    _getUrl() {
-        return this.ajaxUrl  + this._getFilterData();
+    _getFilterUrl() {
+        return this.ajaxUrl + 'filter' + this._getFilterData();
     }
 
     _getFilterData() {
@@ -77,7 +77,7 @@ class Meals {
 }
 
 let meals = new Meals({
-    ajaxUrl: 'ajax/meals/filter',
+    ajaxUrl: 'ajax/meals/',
     table: document.getElementById('datatable'),
     filter: document.getElementById('filter')
 });

@@ -13,7 +13,7 @@
 <div class="jumbotron pt-4">
     <div class="container">
         <h3 class="text-center"><spring:message code="user.title"/></h3>
-        <button class="btn btn-primary" onclick="add()">
+        <button class="btn btn-primary" onclick="user.add()">
             <span class="fa fa-plus"></span>
             <spring:message code="common.add"/>
         </button>
@@ -80,7 +80,7 @@
                     <span class="fa fa-close"></span>
                     <spring:message code="common.cancel"/>
                 </button>
-                <button type="button" class="btn btn-primary" onclick="save()">
+                <button type="button" class="btn btn-primary" onclick="user.save()">
                     <span class="fa fa-check"></span>
                     <spring:message code="common.save"/>
                 </button>

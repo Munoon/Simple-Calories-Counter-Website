@@ -1,12 +1,15 @@
 'use strict';
 
-class Meals {
-    constructor({ ajaxUrl, createModal, table, filter }) {
-        this.ajaxUrl = ajaxUrl;
-        this.table = table;
-        this.filter = filter;
+class Meals extends AbstractCommon{
+    #ajaxUrl;
+    #filter;
 
-        this.filter.addEventListener('click', e => {
+    constructor({ ajaxUrl, datatableApi, filter }) {
+        super({ ajaxUrl, datatableApi });
+        this.#ajaxUrl = ajaxUrl;
+        this.#filter = filter;
+
+        filter.addEventListener('click', e => {
             e.preventDefault();
             switch (e.target.dataset.action) {
                 case 'clear':
@@ -15,10 +18,41 @@ class Meals {
                     this.updateTable();
             }
         });
+    }
 
-        makeEditable({
-                ajaxUrl: this.ajaxUrl,
-                datatableApi: $(this.table).DataTable({
+    save() {
+        super.save(this.#getFilterUrl());
+    }
+
+    updateTable() {
+        super.updateTable(this.#getFilterUrl());
+    }
+
+    clearFilter() {
+        this.#filter.reset();
+    }
+
+    delete(id) {
+        super.deleteRow(id);
+    }
+
+    #getFilterUrl = function() {
+        return this.#ajaxUrl + 'filter' + this.#getFilterData();
+    }
+
+    #getFilterData = function() {
+        let result = '?';
+        this.#filter.querySelectorAll('input').forEach(element => {
+            result += `${element.name}=${element.value}&`;
+        });
+        return result.substring(0, result.length - 1);
+    }
+}
+
+let meals = new Meals({
+    ajaxUrl: 'ajax/meals/',
+    filter: document.getElementById('filter'),
+    datatableApi: $('#datatable').DataTable({
                     "paging": false,
                     "info": true,
                     "columns": [
@@ -47,37 +81,4 @@ class Meals {
                         ]
                     ]
                 })
-            }
-        );
-    }
-
-    save() {
-        save(this._getFilterUrl());
-    }
-
-    updateTable() {
-        updateTable(this._getFilterUrl());
-    }
-
-    clearFilter() {
-        this.filter.reset();
-    }
-
-    _getFilterUrl() {
-        return this.ajaxUrl + 'filter' + this._getFilterData();
-    }
-
-    _getFilterData() {
-        let result = '?';
-        this.filter.querySelectorAll('input').forEach(element => {
-            result += `${element.name}=${element.value}&`;
-        });
-        return result.substring(0, result.length - 1);
-    }
-}
-
-let meals = new Meals({
-    ajaxUrl: 'ajax/meals/',
-    table: document.getElementById('datatable'),
-    filter: document.getElementById('filter')
 });

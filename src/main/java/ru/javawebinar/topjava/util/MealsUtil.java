@@ -55,4 +55,8 @@ public class MealsUtil {
         meal.setDateTime(mealTo.getDateTime());
         return meal;
     }
+
+    public static Meal parseFromTo(MealTo mealTo) {
+        return new Meal(mealTo.getId(), mealTo.getDateTime(), mealTo.getDescription(), mealTo.getCalories());
+    }
 }

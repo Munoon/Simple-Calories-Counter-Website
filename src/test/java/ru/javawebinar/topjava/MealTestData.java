@@ -35,6 +35,10 @@ public class MealTestData {
         return new Meal(MEAL1_ID, MEAL1.getDateTime(), "Обновленный завтрак", 200);
     }
 
+    public static MealTo getUpdatedTo() {
+        return new MealTo(MEAL1_ID, MEAL1.getDateTime(), "Обновленный завтрак", 200, true);
+    }
+
     public static void assertMatch(Meal actual, Meal expected) {
         assertThat(actual).isEqualToIgnoringGivenFields(expected, "user");
     }

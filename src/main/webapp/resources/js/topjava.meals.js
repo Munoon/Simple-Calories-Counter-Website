@@ -25,7 +25,12 @@ $(function () {
             "info": true,
             "columns": [
                 {
-                    "data": "dateTime"
+                    "data": "dateTime",
+                    "render": (data, type, row) => {
+                        if (type === 'display')
+                            return data.substring(0, 16).replace('T', ' ');
+                        return data;
+                    }
                 },
                 {
                     "data": "description"
@@ -40,9 +45,13 @@ $(function () {
                 },
                 {
                     "defaultContent": "Delete",
-                    "orderable": false
+                    "orderable": false,
+                    "render": renderDeleteBtn
                 }
             ],
+            "createdRow": function ( row, data, index ) {
+                row.classList.add(data.excess ? 'blue' : 'green');
+            },
             "order": [
                 [
                     0,

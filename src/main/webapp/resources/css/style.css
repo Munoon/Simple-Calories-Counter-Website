@@ -1,8 +1,8 @@
-tr[data-mealExcess="false"] {
+.green {
     color: green;
 }
 
-tr[data-mealExcess="true"] {
+.blue {
     color: blue;
 }
 

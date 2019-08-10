@@ -43,11 +43,11 @@ function updateTableByData(data) {
     context.datatableApi.clear().rows.add(data).draw();
 }
 
-function save() {
+function save(data = form.serialize()) {
     $.ajax({
         type: "POST",
         url: context.ajaxUrl,
-        data: form.serialize()
+        data
     }).done(function () {
         $("#editRow").modal("hide");
         context.updateTable();

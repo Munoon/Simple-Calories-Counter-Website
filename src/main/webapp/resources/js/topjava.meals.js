@@ -36,6 +36,18 @@ function initDateTimePickers() {
     });
 }
 
+function saveMeal() {
+    // сначала хотел изменить значение input и после вызова save() вернуть старое
+    // но тогда у юзера это Т будет мигать
+    let data = '';
+    document.querySelectorAll('#editRow input').forEach(element => {
+        let value = element.name === 'dateTime' ? element.value.replace(' ', 'T') : element.value;
+        if (element.value !== '')
+            data += `${element.name}=${value}&`;
+    });
+    save(data.substring(0, data.length - 1));
+}
+
 $(function () {
     makeEditable({
         ajaxUrl: mealsAjaxUrl,

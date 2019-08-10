@@ -13,6 +13,29 @@ function clearFilter() {
     $.get("ajax/profile/meals/", updateTableByData);
 }
 
+function initDateTimePickers() {
+    $.datetimepicker.setLocale('ru');
+    $('#startDate').datetimepicker({
+        timepicker: false,
+        format: 'Y-m-d'
+    });
+    $('#endDate').datetimepicker({
+        timepicker: false,
+        format: 'Y-m-d'
+    });
+    $('#startTime').datetimepicker({
+        datepicker: false,
+        format: 'H:i'
+    });
+    $('#endTime').datetimepicker({
+        datepicker: false,
+        format: 'H:i'
+    });
+    $('#dateTime').datetimepicker({
+        format: 'Y-m-d H:i'
+    });
+}
+
 $(function () {
     makeEditable({
         ajaxUrl: mealsAjaxUrl,
@@ -61,4 +84,6 @@ $(function () {
         }),
         updateTable: updateFilteredTable
     });
+
+    initDateTimePickers();
 });

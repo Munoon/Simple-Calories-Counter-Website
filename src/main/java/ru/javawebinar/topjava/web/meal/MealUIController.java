@@ -14,7 +14,6 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.StringJoiner;
 
 @RestController
 @RequestMapping("/ajax/profile/meals")
@@ -40,13 +39,13 @@ public class MealUIController extends AbstractMealController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createOrUpdate(@Valid MealTo mealTo, BindingResult result) {
+    public ResponseEntity<String> createOrUpdate(@Valid Meal meal, BindingResult result) {
         if (result.hasErrors()) return Util.validateTo(result);
 
-        if (mealTo.isNew()) {
-            super.create(MealsUtil.createNewFromTo(mealTo));
+        if (meal.isNew()) {
+            super.create(meal);
         } else {
-            super.update(mealTo, mealTo.id());
+            super.update(meal, meal.id());
         }
 
         return ResponseEntity.ok().build();

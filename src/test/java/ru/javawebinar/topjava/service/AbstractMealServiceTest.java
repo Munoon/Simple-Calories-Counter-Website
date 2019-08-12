@@ -76,13 +76,6 @@ public abstract class AbstractMealServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    void updateMealTo() {
-        MealTo updated = getUpdatedTo();
-        service.update(updated, USER_ID);
-        assertMatch(service.get(MEAL1_ID, USER_ID), MealsUtil.parseFromTo(updated));
-    }
-
-    @Test
     void updateNotFound() throws Exception {
         NotFoundException e = assertThrows(NotFoundException.class, () -> service.update(MEAL1, ADMIN_ID));
         assertEquals(e.getMessage(), "Not found entity with id=" + MEAL1_ID);

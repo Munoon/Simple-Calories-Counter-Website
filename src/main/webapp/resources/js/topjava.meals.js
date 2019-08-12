@@ -1,4 +1,8 @@
 const mealsAjaxUrl = 'ajax/profile/meals/';
+const startDate = $('#startDate');
+const endDate = $('#endDate');
+const startTime = $('#startTime');
+const endTime = $('#endTime');
 
 function updateFilteredTable() {
     $.ajax({
@@ -15,21 +19,37 @@ function clearFilter() {
 
 function initDateTimePickers() {
     $.datetimepicker.setLocale('ru');
-    $('#startDate').datetimepicker({
+    startDate.datetimepicker({
         timepicker: false,
-        format: 'Y-m-d'
+        format: 'Y-m-d',
+        onShow: function() {
+            if (endDate.val())
+                this.setOptions({ maxDate: endDate.val() });
+        }
     });
-    $('#endDate').datetimepicker({
+    endDate.datetimepicker({
         timepicker: false,
-        format: 'Y-m-d'
+        format: 'Y-m-d',
+        onShow: function() {
+            if (startDate.val())
+                this.setOptions({ minDate: startDate.val() });
+        }
     });
-    $('#startTime').datetimepicker({
+    startTime.datetimepicker({
         datepicker: false,
-        format: 'H:i'
+        format: 'H:i',
+        onShow: function() {
+            if (endTime.val())
+                this.setOptions({ maxTime: endTime.val() });
+        }
     });
-    $('#endTime').datetimepicker({
+    endTime.datetimepicker({
         datepicker: false,
-        format: 'H:i'
+        format: 'H:i',
+        onShow: function() {
+            if (startTime.val())
+                this.setOptions({ minTime: startTime.val() });
+        }
     });
     $('#dateTime').datetimepicker({
         format: 'Y-m-d H:i'

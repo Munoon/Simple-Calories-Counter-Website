@@ -105,7 +105,9 @@ $(function () {
                 }
             ],
             "createdRow": function ( row, data, index ) {
-                row.classList.add(data.excess ? 'blue' : 'green');
+                $(row).attr("data-mealExcess", data.excess);
+                // вот это я уже скопировал из демо,
+                // у самого не получилось сделать именно 'data-mealExcess'
             },
             "order": [
                 [

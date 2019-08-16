@@ -1,7 +1,9 @@
 package ru.javawebinar.topjava.web;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -20,7 +22,14 @@ public class GlobalControllerExceptionHandler {
         Throwable rootCause = ValidationUtil.getRootCause(e);
         ModelAndView mav = new ModelAndView("exception/exception");
         mav.addObject("exception", rootCause);
-        mav.addObject("message", rootCause.toString());
+
+        if (e instanceof DataIntegrityViolationException) {
+            String constraintName = ((ConstraintViolationException) e.getCause()).getConstraintName();
+            if (constraintName.equals("users_unique_email_idx"))
+                mav.addObject("message", "User with this email already exists");
+        } else {
+            mav.addObject("message", rootCause.toString());
+        }
 
         // Interceptor is not invoked, put userTo
         AuthorizedUser authorizedUser = SecurityUtil.safeGet();

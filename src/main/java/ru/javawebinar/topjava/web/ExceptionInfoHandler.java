@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.web;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.Ordered;
@@ -37,6 +38,12 @@ public class ExceptionInfoHandler {
     @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
+        String constraintName = ((ConstraintViolationException) e.getCause()).getConstraintName();
+        if (constraintName.equals("users_unique_email_idx")) {
+            log.error("Database error users_unique_email_idx");
+            return new ErrorInfo(req.getRequestURL(), DATA_ERROR, "User with this email already exists");
+        }
+
         return logAndGetErrorInfo(req, e, true, DATA_ERROR);
     }
 

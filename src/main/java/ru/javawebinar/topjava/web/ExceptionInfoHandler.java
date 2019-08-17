@@ -8,6 +8,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +22,8 @@ import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.StringJoiner;
 
 import static ru.javawebinar.topjava.util.exception.ErrorType.*;
 
@@ -50,6 +54,31 @@ public class ExceptionInfoHandler {
     @ExceptionHandler({IllegalRequestDataException.class, MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class})
     public ErrorInfo illegalRequestDataError(HttpServletRequest req, Exception e) {
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
+    }
+
+    @ExceptionHandler(BindException.class)
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorInfo beanValidationExceptionHandler(HttpServletRequest req, BindException e) {
+        log.info("VALIDATION_ERROR at request " + req.getRequestURL());
+        StringJoiner joiner = new StringJoiner("<br>");
+        e.getFieldErrors().forEach(error -> joiner.add(error.getDefaultMessage()));
+        return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, joiner.toString());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErrorInfo argumentNotValidHandler(HttpServletRequest req, MethodArgumentNotValidException e) {
+        StringJoiner joiner = new StringJoiner("; ");
+        e.getBindingResult().getFieldErrors().forEach(error -> {
+            String msg = error.getDefaultMessage();
+            if (msg != null) {
+                if (!msg.startsWith(error.getField())) {
+                    msg = error.getField() + ' ' + msg;
+                }
+                joiner.add(msg);
+            }
+        });
+        return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, joiner.toString());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

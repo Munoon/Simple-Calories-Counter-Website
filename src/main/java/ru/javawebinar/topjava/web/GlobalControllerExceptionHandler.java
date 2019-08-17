@@ -23,13 +23,10 @@ public class GlobalControllerExceptionHandler {
         ModelAndView mav = new ModelAndView("exception/exception");
         mav.addObject("exception", rootCause);
 
-        if (e instanceof DataIntegrityViolationException) {
-            String constraintName = ((ConstraintViolationException) e.getCause()).getConstraintName();
-            if (constraintName.equals("users_unique_email_idx"))
-                mav.addObject("message", "User with this email already exists");
-        } else {
+        if (rootCause.getMessage().contains("users_unique_email_idx"))
+            mav.addObject("message", "User with this email already exists");
+        else
             mav.addObject("message", rootCause.toString());
-        }
 
         // Interceptor is not invoked, put userTo
         AuthorizedUser authorizedUser = SecurityUtil.safeGet();

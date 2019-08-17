@@ -38,8 +38,7 @@ public class ExceptionInfoHandler {
     @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
-        String constraintName = ((ConstraintViolationException) e.getCause()).getConstraintName();
-        if (constraintName.equals("users_unique_email_idx")) {
+        if (e.getMessage().contains("users_unique_email_idx")) {
             log.error("Database error users_unique_email_idx");
             return new ErrorInfo(req.getRequestURL(), DATA_ERROR, "User with this email already exists");
         }

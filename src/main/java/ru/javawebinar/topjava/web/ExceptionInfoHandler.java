@@ -48,7 +48,7 @@ public class ExceptionInfoHandler {
     @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
-        if (e.getMessage().contains("users_unique_email_idx")) {
+        if (e.getRootCause().getMessage().contains("users_unique_email_idx")) {
             log.error("Database error users_unique_email_idx");
             String message = messageSource.getMessage("error.notUniqueEmail", null, LocaleContextHolder.getLocale());
             return new ErrorInfo(req.getRequestURL(), DATA_ERROR, message);

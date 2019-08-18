@@ -32,7 +32,15 @@ public class ProfileUIController extends AbstractUserController {
         if (result.hasErrors()) {
             return "profile";
         } else {
-            super.update(userTo, SecurityUtil.authUserId());
+            try {
+                super.update(userTo, SecurityUtil.authUserId());
+            } catch (DataIntegrityViolationException e) {
+                if (e.getRootCause().getMessage().contains("users_unique_email_idx")) {
+                    String message = messageSource.getMessage("error.notUniqueEmail", null, LocaleContextHolder.getLocale());
+                    result.rejectValue("email", "error.userTo", message);
+                    return "profile";
+                }
+            }
             SecurityUtil.get().update(userTo);
             status.setComplete();
             return "redirect:/meals";

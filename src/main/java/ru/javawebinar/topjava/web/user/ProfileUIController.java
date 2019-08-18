@@ -37,7 +37,7 @@ public class ProfileUIController extends AbstractUserController {
             } catch (DataIntegrityViolationException e) {
                 if (e.getRootCause().getMessage().contains("users_unique_email_idx")) {
                     String message = messageSource.getMessage("error.notUniqueEmail", null, LocaleContextHolder.getLocale());
-                    result.rejectValue("email", "error.userTo", message);
+                    result.rejectValue("email", "VALIDATION_ERROR", message);
                     return "profile";
                 }
             }
@@ -60,8 +60,6 @@ public class ProfileUIController extends AbstractUserController {
             model.addAttribute("register", true);
             return "profile";
         } else {
-            // к сожалению через ExceptionHandler не получилось
-            // пришлось делать через try-catch
             try {
                 super.create(userTo);
                 status.setComplete();
@@ -71,7 +69,7 @@ public class ProfileUIController extends AbstractUserController {
                     return "redirect:/login?message=app.registered&username=" + userTo.getEmail();
 
                 String message = messageSource.getMessage("error.notUniqueEmail", null, LocaleContextHolder.getLocale());
-                result.rejectValue("email", "error.userTo", message);
+                result.rejectValue("email", "VALIDATION_ERROR", message);
                 model.addAttribute("register", true);
                 return "profile";
             }

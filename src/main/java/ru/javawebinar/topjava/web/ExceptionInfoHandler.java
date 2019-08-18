@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.web;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -26,7 +26,9 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.List;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import static ru.javawebinar.topjava.util.exception.ErrorType.*;
 
@@ -66,26 +68,15 @@ public class ExceptionInfoHandler {
     @ExceptionHandler(BindException.class)
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorInfo beanValidationExceptionHandler(HttpServletRequest req, BindException e) {
-        log.info("VALIDATION_ERROR at request " + req.getRequestURL());
-        StringJoiner joiner = new StringJoiner("<br>");
-        e.getFieldErrors().forEach(error -> joiner.add(error.getDefaultMessage()));
-        return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, joiner.toString());
+        List<String> errors = getErrorsFieldList(e.getFieldErrors());
+        return logAndGetErrorInfo(req, errors, true, VALIDATION_ERROR);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     public ErrorInfo argumentNotValidHandler(HttpServletRequest req, MethodArgumentNotValidException e) {
-        StringJoiner joiner = new StringJoiner("; ");
-        e.getBindingResult().getFieldErrors().forEach(error -> {
-            String msg = error.getDefaultMessage();
-            if (msg != null) {
-                if (!msg.startsWith(error.getField())) {
-                    msg = error.getField() + ' ' + msg;
-                }
-                joiner.add(msg);
-            }
-        });
-        return new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, joiner.toString());
+        List<String> errors = getErrorsFieldList(e.getBindingResult().getFieldErrors());
+        return logAndGetErrorInfo(req, errors, true, VALIDATION_ERROR);
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -94,7 +85,7 @@ public class ExceptionInfoHandler {
         return logAndGetErrorInfo(req, e, true, APP_ERROR);
     }
 
-    //    https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
+    // https://stackoverflow.com/questions/538870/should-private-helper-methods-be-static-if-they-can-be-static
     private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, Exception e, boolean logException, ErrorType errorType) {
         Throwable rootCause = ValidationUtil.getRootCause(e);
         if (logException) {
@@ -102,6 +93,24 @@ public class ExceptionInfoHandler {
         } else {
             log.warn("{} at request  {}: {}", errorType, req.getRequestURL(), rootCause.toString());
         }
-        return new ErrorInfo(req.getRequestURL(), errorType, rootCause.toString());
+        return logAndGetErrorInfo(req, rootCause.toString(), false, errorType);
+    }
+
+    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, String message, boolean logException, ErrorType errorType) {
+        if (logException)
+            log.warn("{} at request: {}", errorType, req.getRequestURL());
+        return new ErrorInfo(req.getRequestURL(), errorType, message);
+    }
+
+    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, List<String> details, boolean logException, ErrorType errorType) {
+        if (logException)
+            log.warn("{} at request: {}", errorType, req.getRequestURL());
+        return new ErrorInfo(req.getRequestURL(), errorType, details);
+    }
+
+    private static List<String> getErrorsFieldList(List<FieldError> errors) {
+        return errors.stream()
+                .map(error -> String.format("%s - %s", error.getField(), error.getDefaultMessage()))
+                .collect(Collectors.toList());
     }
 }

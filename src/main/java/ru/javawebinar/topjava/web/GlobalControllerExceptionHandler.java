@@ -28,13 +28,7 @@ public class GlobalControllerExceptionHandler {
         Throwable rootCause = ValidationUtil.getRootCause(e);
         ModelAndView mav = new ModelAndView("exception/exception");
         mav.addObject("exception", rootCause);
-
-        if (rootCause.getMessage().contains("users_unique_email_idx")) {
-            String message = messageSource.getMessage("error.notUniqueEmail", null, LocaleContextHolder.getLocale());
-            mav.addObject("message", message);
-        } else {
-            mav.addObject("message", rootCause.toString());
-        }
+        mav.addObject("message", rootCause.toString());
 
         // Interceptor is not invoked, put userTo
         AuthorizedUser authorizedUser = SecurityUtil.safeGet();

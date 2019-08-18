@@ -107,7 +107,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(created))
                 .with(userAuth(USER)))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -120,7 +120,7 @@ class MealRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated))
                 .with(userHttpBasic(USER)))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test

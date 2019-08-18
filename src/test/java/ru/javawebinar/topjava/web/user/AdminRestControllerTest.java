@@ -123,7 +123,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(created, ""))
                 .with(userHttpBasic(ADMIN)))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -135,7 +135,7 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonWithPassword(updated, ""))
                 .with(userHttpBasic(ADMIN)))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test

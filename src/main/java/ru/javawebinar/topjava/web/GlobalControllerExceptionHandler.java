@@ -3,6 +3,9 @@ package ru.javawebinar.topjava.web;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 public class GlobalControllerExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalControllerExceptionHandler.class);
 
+    @Autowired
+    private MessageSource messageSource;
+
     @ExceptionHandler(Exception.class)
     public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
         log.error("Exception at request " + req.getRequestURL(), e);
@@ -23,10 +29,12 @@ public class GlobalControllerExceptionHandler {
         ModelAndView mav = new ModelAndView("exception/exception");
         mav.addObject("exception", rootCause);
 
-        if (rootCause.getMessage().contains("users_unique_email_idx"))
-            mav.addObject("message", "User with this email already exists");
-        else
+        if (rootCause.getMessage().contains("users_unique_email_idx")) {
+            String message = messageSource.getMessage("error.notUniqueEmail", null, LocaleContextHolder.getLocale());
+            mav.addObject("message", message);
+        } else {
             mav.addObject("message", rootCause.toString());
+        }
 
         // Interceptor is not invoked, put userTo
         AuthorizedUser authorizedUser = SecurityUtil.safeGet();

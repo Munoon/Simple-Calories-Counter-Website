@@ -1,5 +1,8 @@
 package ru.javawebinar.topjava.web.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,6 +19,8 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/profile")
 public class ProfileUIController extends AbstractUserController {
+    @Autowired
+    private MessageSource messageSource;
 
     @GetMapping
     public String profile() {
@@ -57,7 +62,8 @@ public class ProfileUIController extends AbstractUserController {
                 if (!e.getRootCause().getMessage().contains("users_unique_email_idx"))
                     return "redirect:/login?message=app.registered&username=" + userTo.getEmail();
 
-                result.rejectValue("email", "error.userTo", "User with this email already exists");
+                String message = messageSource.getMessage("error.notUniqueEmail", null, LocaleContextHolder.getLocale());
+                result.rejectValue("email", "error.userTo", message);
                 model.addAttribute("register", true);
                 return "profile";
             }

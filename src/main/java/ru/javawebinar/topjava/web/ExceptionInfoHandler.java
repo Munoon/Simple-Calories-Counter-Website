@@ -3,6 +3,9 @@ package ru.javawebinar.topjava.web;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -32,6 +35,9 @@ import static ru.javawebinar.topjava.util.exception.ErrorType.*;
 public class ExceptionInfoHandler {
     private static Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
 
+    @Autowired
+    private MessageSource messageSource;
+
     //  http://stackoverflow.com/a/22358422/548473
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(NotFoundException.class)
@@ -44,7 +50,8 @@ public class ExceptionInfoHandler {
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
         if (e.getMessage().contains("users_unique_email_idx")) {
             log.error("Database error users_unique_email_idx");
-            return new ErrorInfo(req.getRequestURL(), DATA_ERROR, "User with this email already exists");
+            String message = messageSource.getMessage("error.notUniqueEmail", null, LocaleContextHolder.getLocale());
+            return new ErrorInfo(req.getRequestURL(), DATA_ERROR, message);
         }
 
         return logAndGetErrorInfo(req, e, true, DATA_ERROR);

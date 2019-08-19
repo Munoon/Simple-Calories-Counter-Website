@@ -27,6 +27,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
@@ -50,9 +51,16 @@ public class ExceptionInfoHandler {
     @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
-        if (e.getRootCause().getMessage().contains("users_unique_email_idx")) {
+        String errorMessage = e.getRootCause().getMessage();
+        Locale locale = LocaleContextHolder.getLocale();
+
+        if (errorMessage.contains("users_unique_email_idx")) {
             log.error("Database error users_unique_email_idx");
-            String message = messageSource.getMessage("error.notUniqueEmail", null, LocaleContextHolder.getLocale());
+            String message = messageSource.getMessage("error.notUniqueEmail", null, locale);
+            return new ErrorInfo(req.getRequestURL(), DATA_ERROR, message);
+        } else if (errorMessage.contains("meals_unique_user_datetime_idx")) {
+            log.error("Database error meals_unique_user_datetime_idx");
+            String message = messageSource.getMessage("error.notUniqueMealDate", null, locale);
             return new ErrorInfo(req.getRequestURL(), DATA_ERROR, message);
         }
 

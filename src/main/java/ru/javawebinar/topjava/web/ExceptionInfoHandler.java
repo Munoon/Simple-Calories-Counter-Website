@@ -55,11 +55,11 @@ public class ExceptionInfoHandler {
         Locale locale = LocaleContextHolder.getLocale();
 
         if (errorMessage.contains("users_unique_email_idx")) {
-            log.error("Database error users_unique_email_idx");
+            log.warn("Database error users_unique_email_idx");
             String message = messageSource.getMessage("error.notUniqueEmail", null, locale);
             return new ErrorInfo(req.getRequestURL(), DATA_ERROR, message);
         } else if (errorMessage.contains("meals_unique_user_datetime_idx")) {
-            log.error("Database error meals_unique_user_datetime_idx");
+            log.warn("Database error meals_unique_user_datetime_idx");
             String message = messageSource.getMessage("error.notUniqueMealDate", null, locale);
             return new ErrorInfo(req.getRequestURL(), DATA_ERROR, message);
         }

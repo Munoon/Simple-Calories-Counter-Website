@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
@@ -156,5 +158,30 @@ class AdminRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isNoContent());
 
         assertFalse(userService.get(USER_ID).isEnabled());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void createNotUniqueEmail() throws Exception {
+        User expected = new User(null, "New", USER.getEmail(), "newPass",  2300, ROLE_USER, Role.ROLE_ADMIN);
+
+        mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(jsonWithPassword(expected, expected.getPassword())))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    void updateNotUniqueEmail() throws Exception {
+        User updated = new User(USER);
+        updated.setEmail(ADMIN.getEmail());
+
+        mockMvc.perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonWithPassword(updated, updated.getPassword()))
+                .with(userHttpBasic(ADMIN)))
+                .andExpect(status().isConflict());
     }
 }
